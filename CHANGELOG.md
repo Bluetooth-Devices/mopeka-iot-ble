@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.0 (2023-01-24)
+### Feature
+* Add support for the check device ([#3](https://github.com/Bluetooth-Devices/mopeka-iot-ble/issues/3)) ([`7637c02`](https://github.com/Bluetooth-Devices/mopeka-iot-ble/commit/7637c0237002e6325c6cc9c5d1ba45776b6760cc))
+
 ## v0.2.1 (2023-01-24)
 ### Fix
 * Skip bad reads of the tank level ([#2](https://github.com/Bluetooth-Devices/mopeka-iot-ble/issues/2)) ([`a6cb356`](https://github.com/Bluetooth-Devices/mopeka-iot-ble/commit/a6cb356a8aec85d178e1092dae3e274394d6b0d0))

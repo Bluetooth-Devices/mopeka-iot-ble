@@ -23,7 +23,7 @@ from sensor_state_data import (
 
 from .parser import MopekaIOTBluetoothDeviceData
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
 __all__ = [
     "MopekaIOTBluetoothDeviceData",
