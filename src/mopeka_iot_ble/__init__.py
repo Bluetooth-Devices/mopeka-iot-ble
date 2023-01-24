@@ -8,6 +8,8 @@ MIT License applies.
 from __future__ import annotations
 
 from sensor_state_data import (
+    BinarySensorDescription,
+    BinarySensorValue,
     DeviceClass,
     DeviceKey,
     SensorDescription,
@@ -23,6 +25,8 @@ __version__ = "0.0.0"
 
 __all__ = [
     "MopekaIOTBluetoothDeviceData",
+    "BinarySensorDescription",
+    "BinarySensorValue",
     "SensorDescription",
     "SensorDeviceInfo",
     "DeviceClass",
