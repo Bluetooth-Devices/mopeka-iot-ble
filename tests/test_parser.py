@@ -67,7 +67,7 @@ def test_pro_bad_quality():
         title=None,
         devices={
             None: SensorDeviceInfo(
-                name="Pro+ F509",
+                name="Pro Plus F509",
                 model="M1015",
                 manufacturer="Mopeka IOT",
                 sw_version=None,
@@ -193,7 +193,7 @@ def test_pro_good_quality():
         title=None,
         devices={
             None: SensorDeviceInfo(
-                name="Pro+ F509",
+                name="Pro Plus F509",
                 model="M1015",
                 manufacturer="Mopeka IOT",
                 sw_version=None,
@@ -319,7 +319,7 @@ def test_pro_installed():
         title=None,
         devices={
             None: SensorDeviceInfo(
-                name="Pro+ F509",
+                name="Pro Plus F509",
                 model="M1015",
                 manufacturer="Mopeka IOT",
                 sw_version=None,
@@ -445,7 +445,7 @@ def test_check_installed():
         title=None,
         devices={
             None: SensorDeviceInfo(
-                name="Check F509",
+                name="Pro Check F509",
                 model="M1017",
                 manufacturer="Mopeka IOT",
                 sw_version=None,
