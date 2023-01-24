@@ -103,7 +103,7 @@ def test_pro_bad_quality():
             DeviceKey(key="reading_quality", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
                 device_class=None,
-                native_unit_of_measurement=None,
+                native_unit_of_measurement=Units.PERCENTAGE,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
@@ -150,7 +150,7 @@ def test_pro_bad_quality():
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
                 name="Reading " "quality",
-                native_value="low",
+                native_value=33,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
@@ -229,7 +229,7 @@ def test_pro_good_quality():
             DeviceKey(key="reading_quality", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
                 device_class=None,
-                native_unit_of_measurement=None,
+                native_unit_of_measurement=Units.PERCENTAGE,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
@@ -276,7 +276,7 @@ def test_pro_good_quality():
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
                 name="Reading " "quality",
-                native_value="high",
+                native_value=100,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
@@ -355,7 +355,7 @@ def test_pro_installed():
             DeviceKey(key="reading_quality", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
                 device_class=None,
-                native_unit_of_measurement=None,
+                native_unit_of_measurement=Units.PERCENTAGE,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
@@ -402,7 +402,7 @@ def test_pro_installed():
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
                 name="Reading " "quality",
-                native_value="high",
+                native_value=100,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
@@ -481,7 +481,7 @@ def test_check_installed():
             DeviceKey(key="reading_quality", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
                 device_class=None,
-                native_unit_of_measurement=None,
+                native_unit_of_measurement=Units.PERCENTAGE,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
@@ -528,7 +528,7 @@ def test_check_installed():
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
                 name="Reading " "quality",
-                native_value="high",
+                native_value=100,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
