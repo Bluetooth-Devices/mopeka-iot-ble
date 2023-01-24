@@ -27,7 +27,7 @@ PRO_SERVICE_GOOD_QUALITY_INFO = BluetoothServiceInfo(
     name="",
     address="C9:F3:32:E0:F5:09",
     rssi=-63,
-    manufacturer_data={89: b"\x08rF\x00B\xe0\xf5\t\xf0\xd8"},
+    manufacturer_data={89: b"\x08rF\x00\xc0\xe0\xf5\t\xf0\xd8"},
     service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
     service_data={},
     source="local",
@@ -109,7 +109,7 @@ def test_pro_bad_quality():
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank " "Level",
-                native_value=0,
+                native_value=None,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
                 device_key=DeviceKey(key="temperature", device_id=None),
@@ -255,12 +255,12 @@ def test_pro_good_quality():
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
                 name="Reading " "quality",
-                native_value="low",
+                native_value="high",
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
                 name="Reading " "quality " "raw",
-                native_value=1,
+                native_value=3,
             ),
             DeviceKey(key="accelerometer_y", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_y", device_id=None),
