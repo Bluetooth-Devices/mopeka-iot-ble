@@ -165,10 +165,4 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
             None,
             "Reading quality",
         )
-        self.update_sensor(
-            "reading_stars",
-            None,
-            reading_quality * "⭐",
-            None,
-            "Reading stars",
-        )
+        # Reading stars = (3-reading_quality) * "★" + (reading_quality * "⭐")
