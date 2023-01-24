@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.0 (2023-01-24)
+### Feature
+* Add more exports ([#1](https://github.com/Bluetooth-Devices/mopeka-iot-ble/issues/1)) ([`fe006f9`](https://github.com/Bluetooth-Devices/mopeka-iot-ble/commit/fe006f910ffe366c3f04cad09b83525d0c6399e4))
+
 ## v0.1.0 (2023-01-24)
 ### Feature
 * Add cover ([`2032ee0`](https://github.com/Bluetooth-Devices/mopeka-iot-ble/commit/2032ee0993990d789b7efb831592b6c3b9ad8fc3))
