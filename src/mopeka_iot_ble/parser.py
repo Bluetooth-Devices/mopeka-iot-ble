@@ -143,12 +143,15 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
             key="battery_voltage",
         )
         self.update_predefined_binary_sensor(
-            BinarySensorDeviceClass.OCCUPANCY, button_pressed
+            BinarySensorDeviceClass.OCCUPANCY,
+            button_pressed,
+            key="button_pressed",
+            name="Button pressed",
         )
         self.update_sensor(
             "tank_level",
             Units.LENGTH_MILLIMETERS,
-            tank_level_mm,
+            tank_level_mm if reading_quality >= 2 else None,
             SensorDeviceClass.DISTANCE,
             "Tank Level",
         )
