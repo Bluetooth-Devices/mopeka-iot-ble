@@ -85,14 +85,6 @@ def tank_level_and_temp_to_mm(tank_level: int, temp: int) -> int:
     )
 
 
-TANK_READ_QUALITY = {
-    0: "bad",
-    1: "low",
-    2: "medium",
-    3: "high",
-}
-
-
 class MopekaIOTBluetoothDeviceData(BluetoothData):
     """Data for Mopeka IOT BLE sensors."""
 
@@ -178,8 +170,8 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
         )
         self.update_sensor(
             "reading_quality",
-            None,
-            TANK_READ_QUALITY[reading_quality],
+            Units.PERCENTAGE,
+            round(reading_quality / 3 * 100),
             None,
             "Reading quality",
         )
