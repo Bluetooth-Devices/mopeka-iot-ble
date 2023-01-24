@@ -39,12 +39,13 @@ class MopekaDevice:
 
 
 DEVICE_TYPES = {
-    0x3: MopekaDevice("M1015", "Bottom up propane", 10),
+    0x3: MopekaDevice("", "Bottom up propane", 10),
     0x4: MopekaDevice("", "Top down air space", 10),
     0x5: MopekaDevice("", "Bottom up water", 10),
+    0x8: MopekaDevice("M1015", "Pro+", 10),
 }
 
-SUPPORTED_DEVICE_TYPES = {0x3}
+SUPPORTED_DEVICE_TYPES = {0x3, 0x8}
 
 
 def hex(data: bytes) -> str:
@@ -59,7 +60,7 @@ def battery_to_voltage(battery: int) -> float:
 
 def battery_to_percentage(battery: int) -> float:
     """Convert battery value to percentage."""
-    return round(min(0, max(100, (((battery / 32.0) - 2.2) / 0.65) * 100)), 1)
+    return round(max(0, min(100, (((battery / 32.0) - 2.2) / 0.65) * 100)), 1)
 
 
 def temp_to_celsius(temp: int) -> int:
@@ -97,10 +98,12 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
             MOPEKA_MANUFACTURER not in manufacturer_data
             or MOKPEKA_PRO_SERVICE_UUID not in service_uuids
         ):
+            _LOGGER.debug("Not a Mopeka IOT BLE advertisement: %s", service_info)
             return
         data = manufacturer_data[MOPEKA_MANUFACTURER]
         model_num = data[0]
         if not (device_type := DEVICE_TYPES.get(model_num)):
+            _LOGGER.debug("Unsupported Mopeka IOT BLE advertisement: %s", service_info)
             return
         adv_length = device_type.adv_length
         if len(data) != adv_length:
@@ -126,7 +129,10 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
             SensorLibrary.BATTERY__PERCENTAGE, battery_percentage
         )
         self.update_predefined_sensor(
-            SensorLibrary.VOLTAGE__ELECTRIC_POTENTIAL_VOLT, battery_voltage
+            SensorLibrary.VOLTAGE__ELECTRIC_POTENTIAL_VOLT,
+            battery_voltage,
+            name="Battery Voltage",
+            key="battery_voltage",
         )
         self.update_predefined_binary_sensor(
             BinarySensorDeviceClass.OCCUPANCY, button_pressed
@@ -155,7 +161,7 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             "reading_quality",
             None,
-            reading_quality,
+            reading_quality * "⭐",
             None,
             "Reading quality",
         )
