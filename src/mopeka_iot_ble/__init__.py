@@ -9,10 +9,12 @@ from __future__ import annotations
 
 from sensor_state_data import (
     BinarySensorDescription,
+    BinarySensorDeviceClass,
     BinarySensorValue,
     DeviceClass,
     DeviceKey,
     SensorDescription,
+    SensorDeviceClass,
     SensorDeviceInfo,
     SensorUpdate,
     SensorValue,
@@ -25,12 +27,14 @@ __version__ = "0.1.0"
 
 __all__ = [
     "MopekaIOTBluetoothDeviceData",
+    "BinarySensorDeviceClass",
     "BinarySensorDescription",
     "BinarySensorValue",
     "SensorDescription",
     "SensorDeviceInfo",
     "DeviceClass",
     "DeviceKey",
+    "SensorDeviceClass",
     "SensorUpdate",
     "SensorDeviceInfo",
     "SensorValue",
