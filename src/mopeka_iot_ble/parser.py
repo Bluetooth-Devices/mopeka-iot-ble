@@ -143,7 +143,7 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
         self.update_sensor(
             "tank_level",
             Units.LENGTH_MILLIMETERS,
-            tank_level_mm if reading_quality >= 2 else None,
+            tank_level_mm if reading_quality >= 1 else None,
             SensorDeviceClass.DISTANCE,
             "Tank Level",
         )

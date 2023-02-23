@@ -13,7 +13,7 @@ from sensor_state_data import (
 
 from mopeka_iot_ble.parser import MopekaIOTBluetoothDeviceData
 
-PRO_SERVICE_INFO = BluetoothServiceInfo(
+PRO_SERVICE_LOW_QUALITY_INFO = BluetoothServiceInfo(
     name="",
     address="C9:F3:32:E0:F5:09",
     rssi=-63,
@@ -59,9 +59,9 @@ def test_can_create():
     MopekaIOTBluetoothDeviceData()
 
 
-def test_pro_bad_quality():
+def test_pro_low_quality():
     parser = MopekaIOTBluetoothDeviceData()
-    service_info = PRO_SERVICE_INFO
+    service_info = PRO_SERVICE_LOW_QUALITY_INFO
     result = parser.update(service_info)
     assert result == SensorUpdate(
         title=None,
@@ -130,7 +130,7 @@ def test_pro_bad_quality():
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank " "Level",
-                native_value=None,
+                native_value=0,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
                 device_key=DeviceKey(key="temperature", device_id=None),
