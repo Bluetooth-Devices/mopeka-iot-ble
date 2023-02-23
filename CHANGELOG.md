@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.1 (2023-02-23)
+### Fix
+* Show readings of quality 1 ([#5](https://github.com/Bluetooth-Devices/mopeka-iot-ble/issues/5)) ([`1e034e6`](https://github.com/Bluetooth-Devices/mopeka-iot-ble/commit/1e034e6c1884c7c8e1eefbe64022aaa11df68648))
+
 ## v0.4.0 (2023-01-24)
 ### Feature
 * Express reading quality as a percentage ([#4](https://github.com/Bluetooth-Devices/mopeka-iot-ble/issues/4)) ([`1f26c88`](https://github.com/Bluetooth-Devices/mopeka-iot-ble/commit/1f26c88181963710aa7d427333536fb79236cfe6))
