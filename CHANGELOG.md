@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.0 (2023-11-16)
+
+### Feature
+
+* Adding the new 2023 "Pro Check Universal" device (M1017020A) ([#9](https://github.com/Bluetooth-Devices/mopeka-iot-ble/issues/9)) ([`0b81c71`](https://github.com/Bluetooth-Devices/mopeka-iot-ble/commit/0b81c71c1b44382ec163d5db49902aa56c06bf7e))
+
 ## v0.4.1 (2023-02-23)
 ### Fix
 * Show readings of quality 1 ([#5](https://github.com/Bluetooth-Devices/mopeka-iot-ble/issues/5)) ([`1e034e6`](https://github.com/Bluetooth-Devices/mopeka-iot-ble/commit/1e034e6c1884c7c8e1eefbe64022aaa11df68648))
