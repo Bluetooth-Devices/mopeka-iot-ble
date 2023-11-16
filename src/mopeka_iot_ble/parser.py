@@ -40,17 +40,18 @@ class MopekaDevice:
 
 DEVICE_TYPES = {
     0x3: MopekaDevice("M1017", "Pro Check", 10),
+    0xC: MopekaDevice("M1017", "Pro Check Universal", 10),
     0x4: MopekaDevice("", "Top down air space", 10),
     0x5: MopekaDevice("", "Bottom up water", 10),
     0x8: MopekaDevice("M1015", "Pro Plus", 10),
 }
 
-SUPPORTED_DEVICE_TYPES = {0x3, 0x8}
+SUPPORTED_DEVICE_TYPES = {0x3, 0xC, 0x8}
 
 
 def hex(data: bytes) -> str:
     """Return a string object containing two hexadecimal digits for each byte in the instance."""
-    return "b'{}'".format("".join(f"\\x{b:02x}" for b in data))
+    return "b'{}'".format("".join(f"\\x{b:02x}" for b in data))  # noqa: E231
 
 
 def battery_to_voltage(battery: int) -> float:
