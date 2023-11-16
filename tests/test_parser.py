@@ -11,7 +11,7 @@ from sensor_state_data import (
     Units,
 )
 
-from mopeka_iot_ble.parser import MopekaIOTBluetoothDeviceData
+from mopeka_iot_ble.parser import MopekaIOTBluetoothDeviceData, hex
 
 PRO_SERVICE_BAD_QUALITY_INFO = BluetoothServiceInfo(
     name="",
@@ -74,6 +74,13 @@ CHECK_UNIVERSAL_INSTALLED_SERVICE_INFO = BluetoothServiceInfo(
     service_data={},
     source="local",
 )
+
+
+def test_hex():
+    assert (
+        hex(b"\x08rF\x000\xe0\xf5\t\xf0\xd8")
+        == "b'\\x08\\x72\\x46\\x00\\x30\\xe0\\xf5\\x09\\xf0\\xd8'"
+    )
 
 
 def test_can_create():
