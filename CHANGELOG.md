@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.6.0 (2024-02-03)
+
+### Feature
+
+* Add support for Lippert BottleCheck ([#14](https://github.com/Bluetooth-Devices/mopeka-iot-ble/issues/14)) ([`95b10c2`](https://github.com/Bluetooth-Devices/mopeka-iot-ble/commit/95b10c299b082cc1b6047165e2ebaaab1647f071))
+
 ## v0.5.0 (2023-11-16)
 
 ### Feature
