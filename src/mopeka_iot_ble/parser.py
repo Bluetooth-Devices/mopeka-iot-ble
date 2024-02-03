@@ -43,10 +43,9 @@ DEVICE_TYPES = {
     0xC: MopekaDevice("M1017", "Pro Check Universal", 10),
     0x4: MopekaDevice("", "Top down air space", 10),
     0x5: MopekaDevice("", "Bottom up water", 10),
+    0x6: MopekaDevice("M1017", "Lippert BottleCheck", 10),
     0x8: MopekaDevice("M1015", "Pro Plus", 10),
 }
-
-SUPPORTED_DEVICE_TYPES = {0x3, 0xC, 0x8}
 
 
 def hex(data: bytes) -> str:
