@@ -40,11 +40,14 @@ class MopekaDevice:
 
 DEVICE_TYPES = {
     0x3: MopekaDevice("M1017", "Pro Check", 10),
-    0xC: MopekaDevice("M1017", "Pro Check Universal", 10),
-    0x4: MopekaDevice("", "Top down air space", 10),
-    0x5: MopekaDevice("", "Bottom up water", 10),
+    0x4: MopekaDevice("Pro-200", "Pro-200", 10),
+    0x5: MopekaDevice("Pro H20", "Pro Check H2O", 10),
     0x6: MopekaDevice("M1017", "Lippert BottleCheck", 10),
     0x8: MopekaDevice("M1015", "Pro Plus", 10),
+    0x9: MopekaDevice("M1015", "Pro Plus with Cellular", 10),
+    0xA: MopekaDevice("TD40/TD200", "TD40/TD200", 10),
+    0xB: MopekaDevice("TD40/TD200", "TD40/TD200 with Cellular", 10),
+    0xC: MopekaDevice("M1017", "Pro Check Universal", 10),
 }
 
 
