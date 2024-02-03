@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.7.0 (2024-02-03)
+
+### Feature
+
+* Add TD40/TD200 models ([#15](https://github.com/Bluetooth-Devices/mopeka-iot-ble/issues/15)) ([`80615f6`](https://github.com/Bluetooth-Devices/mopeka-iot-ble/commit/80615f65ac780c64ff2a02716e7e61b4b8213f8b))
+
 ## v0.6.0 (2024-02-03)
 
 ### Feature
