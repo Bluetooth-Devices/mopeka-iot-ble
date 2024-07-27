@@ -95,7 +95,7 @@ def tank_level_and_temp_to_mm(
     tank_level: int, temp: int, medium: MediumType = MediumType.PROPANE
 ) -> int:
     """Get the tank level in mm for a given fluid type."""
-    coefs = MOPEKA_TANK_LEVEL_COEFFICIENTS.get(medium)
+    coefs = MOPEKA_TANK_LEVEL_COEFFICIENTS[medium]
     return int(tank_level * (coefs[0] + (coefs[1] * temp) + (coefs[2] * (temp**2))))
 
 
