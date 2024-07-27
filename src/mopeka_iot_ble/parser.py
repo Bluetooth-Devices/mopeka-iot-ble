@@ -33,7 +33,6 @@ MOKPEKA_PRO_SERVICE_UUID = "0000fee5-0000-1000-8000-00805f9b34fb"
 
 @dataclass
 class MopekaDevice:
-
     model: str
     name: str
     adv_length: int
