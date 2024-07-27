@@ -21,7 +21,7 @@ from sensor_state_data import (
     Units,
 )
 
-from .mopeka_types import MediumType
+from .models import MediumType
 
 _LOGGER = logging.getLogger(__name__)
 
