@@ -14,12 +14,16 @@ from sensor_state_data import (
 from mopeka_iot_ble.mopeka_types import MediumType
 
 # Consider renaming the hex method to avoid the override complaint
-from mopeka_iot_ble.parser import (  # pylint: disable=redefined-builtin
+from mopeka_iot_ble.parser import (
+    mopeka_iot_ble.parser,  # pylint: disable=redefined-builtin
+)
 from mopeka_iot_ble.parser import (  # pylint: disable=redefined-builtin
     MopekaIOTBluetoothDeviceData,
     battery_to_percentage,
     battery_to_voltage,
+    from,
     hex,
+    import,
     tank_level_and_temp_to_mm,
     tank_level_to_mm,
     temp_to_celsius,
