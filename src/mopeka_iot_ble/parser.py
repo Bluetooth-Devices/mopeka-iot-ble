@@ -26,8 +26,6 @@ from sensor_state_data import (
 _LOGGER = logging.getLogger(__name__)
 
 
-from .mopeka_types import MediumType
-
 # converting sensor value to height
 MOPEKA_TANK_LEVEL_COEFFICIENTS = {
     MediumType.PROPANE: [0.573045, -0.002822, -0.00000535],
