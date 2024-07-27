@@ -8,6 +8,8 @@ MIT License applies.
 
 from __future__ import annotations
 
+from .mopeka_types import MediumType
+
 import logging
 
 from dataclasses import dataclass
@@ -23,10 +25,6 @@ from sensor_state_data import (
 )
 
 _LOGGER = logging.getLogger(__name__)
-
-
-from .mopeka_types import MediumType
-
 
 # converting sensor value to height
 MOPEKA_TANK_LEVEL_COEFFICIENTS = {
@@ -46,6 +44,7 @@ MOPEKA_TANK_LEVEL_COEFFICIENTS = {
 
 MOPEKA_MANUFACTURER = 89
 MOKPEKA_PRO_SERVICE_UUID = "0000fee5-0000-1000-8000-00805f9b34fb"
+
 
 @dataclass
 class MopekaDevice:
@@ -92,6 +91,7 @@ def tank_level_to_mm(tank_level: int) -> int:
     """Convert tank level value to mm."""
     return tank_level * 10
 
+
 def tank_level_and_temp_to_mm(tank_level: int, temp: int, medium: MediumType = MediumType.PROPANE) -> int:
     """Get the tank level in mm for a given fluid type."""
     coefs = MOPEKA_TANK_LEVEL_COEFFICIENTS.get(medium)
@@ -109,20 +109,21 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
     """Data for Mopeka IOT BLE sensors."""
 
     def __init__(self) -> None:
-      super().__init__()
-      self._medium_type = MediumType.PROPANE
+        super().__init__()
+        self._medium_type = MediumType.PROPANE
 
     @property
     def medium_type(self) -> MediumType:
         return self._medium_type
 
     @medium_type.setter
-    def medium_type(self, value: MediumType) ->None:
+    def medium_type(self, value: MediumType) -> None:
         self._medium_type = value
 
     def _start_update(self, service_info: BluetoothServiceInfo) -> None:
         """Update from BLE advertisement data."""
-        _LOGGER.debug("Parsing Mopeka IOT BLE advertisement data: %s, MediumType is: %s", service_info, self._medium_type)
+        _LOGGER.debug("Parsing Mopeka IOT BLE advertisement data: %s, MediumType is: %s",
+                      service_info, self._medium_type)
         manufacturer_data = service_info.manufacturer_data
         service_uuids = service_info.service_uuids
         address = service_info.address

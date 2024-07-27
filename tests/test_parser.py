@@ -12,7 +12,7 @@ from sensor_state_data import (
 )
 
 # Consider renaming the hex method to avoid the override complaint
-from mopeka_iot_ble.parser import ( # pylint: disable=redefined-builtin
+from mopeka_iot_ble.parser import (  # pylint: disable=redefined-builtin
     MopekaIOTBluetoothDeviceData,
     hex,
     battery_to_voltage,
@@ -989,6 +989,7 @@ def test_lippert():
         events={},
     )
 
+
 TDR40_AIR_BAD_QUALITY_INFO = BluetoothServiceInfo(
     name="",
     address="DA:D8:AC:6A:75:10",
@@ -1025,21 +1026,26 @@ temperature_raw = 77  # example temperature raw value
 tank_level_raw = 3145  # example tank level raw value
 medium_type = MediumType.AIR
 
+
 def test_battery_to_voltage():
     voltage = battery_to_voltage(battery_raw)
     assert voltage == 2.78125
+
 
 def test_battery_to_percentage():
     percentage = battery_to_percentage(battery_raw)
     assert percentage == 89.4
 
+
 def test_temp_to_celsius():
     celsius = temp_to_celsius(temperature_raw)
     assert celsius == 37
 
+
 def test_tank_level_to_mm():
     mm = tank_level_to_mm(tank_level_raw)
     assert mm == 31450  # tank_level_raw * 10
+
 
 def test_tank_level_and_temp_to_mm():
     tank_level_mm = tank_level_and_temp_to_mm(tank_level_raw, temperature_raw, medium_type)
@@ -1052,6 +1058,7 @@ def test_tank_level_and_temp_to_mm():
         )
     )
     assert tank_level_mm == expected_mm
+
 
 def test_parser_with_sample_data():
     parser = MopekaIOTBluetoothDeviceData()
@@ -1075,6 +1082,7 @@ def test_parser_with_sample_data():
             + (-0.000000294 * (temperature_raw ** 2))  # coefs[2] * (temp ** 2)
         )
     )
+
 
 # Test entire parser chain
 def test_tdr40_air_bad_quality():
@@ -1203,6 +1211,7 @@ def test_tdr40_air_bad_quality():
         },
         events={},
     )
+
 
 def test_tdr40_air_low_quality():
     parser = MopekaIOTBluetoothDeviceData()
@@ -1408,47 +1417,47 @@ def test_tdr40_air_good_quality():
             DeviceKey(key="battery_voltage", device_id=None): SensorValue(
                 device_key=DeviceKey(key="battery_voltage", device_id=None),
                 name="Battery Voltage",
-                native_value=3.53125,
+                native_value=3.53125
             ),
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
-                native_value=729,
+                native_value=729
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 name="Temperature",
-                native_value=24,
+                native_value=24
             ),
             DeviceKey(key="battery", device_id=None): SensorValue(
                 device_key=DeviceKey(key="battery", device_id=None),
                 name="Battery",
-                native_value=100,
+                native_value=100
             ),
             DeviceKey(key="signal_strength", device_id=None): SensorValue(
                 device_key=DeviceKey(key="signal_strength", device_id=None),
                 name="Signal Strength",
-                native_value=-50, 
+                native_value=-50
             ),
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
                 name="Reading quality",
-                native_value=100,  
+                native_value=100
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
                 name="Reading quality raw",
-                native_value=3,  
+                native_value=3
             ),
             DeviceKey(key="accelerometer_y", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_y", device_id=None),
                 name="Position Y",
-                native_value=32,  
+                native_value=32
             ),
             DeviceKey(key="accelerometer_x", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_x", device_id=None),
                 name="Position X",
-                native_value=128, 
+                native_value=128
             ),
         },
         binary_entity_descriptions={
