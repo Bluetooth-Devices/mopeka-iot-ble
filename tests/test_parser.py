@@ -43,6 +43,16 @@ PRO_SERVICE_LOW_QUALITY_INFO = BluetoothServiceInfo(
     service_data={},
     source="local",
 )
+TDR40_AIR_LOW_QUALITY_INFO_2 = BluetoothServiceInfo(
+    name="",
+    address="DA:D8:AC:6A:75:10",
+    rssi=-49,
+    manufacturer_data={89: b"\x0c`8<\x83*\xea\x8c1\xf8"},
+    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
 
 PRO_SERVICE_GOOD_QUALITY_INFO = BluetoothServiceInfo(
     name="",
@@ -1231,16 +1241,8 @@ def test_tdr40_air_bad_quality():
 
 def test_tdr40_air_low_quality():
     parser = MopekaIOTBluetoothDeviceData(MediumType.AIR)
-    service_info = BluetoothServiceInfo(
-        name="",
-        address="DA:D8:AC:6A:75:10",
-        rssi=-49,
-        manufacturer_data={89: b"\x0c`8<\x83*\xea\x8c1\xf8"},
-        service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
-        service_data={},
-        source="local",
-    )
-    result = parser.update(service_info)
+
+    result = parser.update(TDR40_AIR_LOW_QUALITY_INFO_2)
 
     assert result == SensorUpdate(
         title=None,
