@@ -11,18 +11,18 @@ from sensor_state_data import (
     Units,
 )
 
-# Consider renaming the hex method to avoid the override complaint
-from mopeka_iot_ble.parser import ( # pylint: disable=redefined-builtin
-    MopekaIOTBluetoothDeviceData,
-    hex,
-    battery_to_voltage,
-    battery_to_percentage,
-    temp_to_celsius,
-    tank_level_to_mm,
-    tank_level_and_temp_to_mm
-)
-
 from mopeka_iot_ble.mopeka_types import MediumType
+
+# Consider renaming the hex method to avoid the override complaint
+from mopeka_iot_ble.parser import (  # pylint: disable=redefined-builtin
+    MopekaIOTBluetoothDeviceData,
+    battery_to_percentage,
+    battery_to_voltage,
+    hex,
+    tank_level_and_temp_to_mm,
+    tank_level_to_mm,
+    temp_to_celsius,
+)
 
 PRO_SERVICE_BAD_QUALITY_INFO = BluetoothServiceInfo(
     name="",
@@ -989,11 +989,12 @@ def test_lippert():
         events={},
     )
 
+
 TDR40_AIR_BAD_QUALITY_INFO = BluetoothServiceInfo(
     name="",
     address="DA:D8:AC:6A:75:10",
     rssi=-60,
-    manufacturer_data={89: b'\ns@NMju\x10\x7f\x80'},
+    manufacturer_data={89: b"\ns@NMju\x10\x7f\x80"},
     service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
     service_data={},
     source="local",
@@ -1003,7 +1004,7 @@ TDR40_AIR_LOW_QUALITY_INFO = BluetoothServiceInfo(
     name="",
     address="DA:D8:AC:6A:75:10",
     rssi=-44,
-    manufacturer_data={89: b'\x0c`8<\x83*\xea\x8c1\xf8'},
+    manufacturer_data={89: b"\x0c`8<\x83*\xea\x8c1\xf8"},
     service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
     service_data={},
     source="local",
@@ -1013,7 +1014,7 @@ TDR40_AIR_GOOD_QUALITY_INFO = BluetoothServiceInfo(
     name="",
     address="DA:D8:AC:6A:75:10",
     rssi=-50,
-    manufacturer_data={89: b'\nq@}\xd0ju\x10\x80 '},
+    manufacturer_data={89: b"\nq@}\xd0ju\x10\x80 "},
     service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
     service_data={},
     source="local",
@@ -1025,33 +1026,41 @@ temperature_raw = 77  # example temperature raw value
 tank_level_raw = 3145  # example tank level raw value
 medium_type = MediumType.AIR
 
+
 def test_battery_to_voltage():
     voltage = battery_to_voltage(battery_raw)
     assert voltage == 2.78125
+
 
 def test_battery_to_percentage():
     percentage = battery_to_percentage(battery_raw)
     assert percentage == 89.4
 
+
 def test_temp_to_celsius():
     celsius = temp_to_celsius(temperature_raw)
     assert celsius == 37
+
 
 def test_tank_level_to_mm():
     mm = tank_level_to_mm(tank_level_raw)
     assert mm == 31450  # tank_level_raw * 10
 
+
 def test_tank_level_and_temp_to_mm():
-    tank_level_mm = tank_level_and_temp_to_mm(tank_level_raw, temperature_raw, medium_type)
+    tank_level_mm = tank_level_and_temp_to_mm(
+        tank_level_raw, temperature_raw, medium_type
+    )
     expected_mm = int(
         tank_level_raw
         * (
             0.153096  # coefs[0] for MediumType.AIR
             + (0.000327 * temperature_raw)  # coefs[1] * temp
-            + (-0.000000294 * (temperature_raw ** 2))  # coefs[2] * (temp ** 2)
+            + (-0.000000294 * (temperature_raw**2))  # coefs[2] * (temp ** 2)
         )
     )
     assert tank_level_mm == expected_mm
+
 
 def test_parser_with_sample_data():
     parser = MopekaIOTBluetoothDeviceData()
@@ -1061,7 +1070,9 @@ def test_parser_with_sample_data():
         "battery_voltage": battery_to_voltage(battery_raw),
         "battery_percentage": battery_to_percentage(battery_raw),
         "temperature": temp_to_celsius(temperature_raw),
-        "tank_level_mm": tank_level_and_temp_to_mm(tank_level_raw, temperature_raw, medium_type),
+        "tank_level_mm": tank_level_and_temp_to_mm(
+            tank_level_raw, temperature_raw, medium_type
+        ),
     }
 
     assert sample_data["battery_voltage"] == 2.78125
@@ -1072,9 +1083,10 @@ def test_parser_with_sample_data():
         * (
             0.153096  # coefs[0] for MediumType.AIR
             + (0.000327 * temperature_raw)  # coefs[1] * temp
-            + (-0.000000294 * (temperature_raw ** 2))  # coefs[2] * (temp ** 2)
+            + (-0.000000294 * (temperature_raw**2))  # coefs[2] * (temp ** 2)
         )
     )
+
 
 # Test entire parser chain
 def test_tdr40_air_bad_quality():
@@ -1204,6 +1216,7 @@ def test_tdr40_air_bad_quality():
         events={},
     )
 
+
 def test_tdr40_air_low_quality():
     parser = MopekaIOTBluetoothDeviceData()
     parser.medium_type = MediumType.AIR
@@ -1211,7 +1224,7 @@ def test_tdr40_air_low_quality():
         name="",
         address="DA:D8:AC:6A:75:10",
         rssi=-49,
-        manufacturer_data={89: b'\x0c`8<\x83*\xea\x8c1\xf8'},
+        manufacturer_data={89: b"\x0c`8<\x83*\xea\x8c1\xf8"},
         service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
         service_data={},
         source="local",
@@ -1222,9 +1235,9 @@ def test_tdr40_air_low_quality():
         title=None,
         devices={
             None: SensorDeviceInfo(
-                name='Pro Check Universal 7510',  # Updated name
-                model='M1017',  # Updated model
-                manufacturer='Mopeka IOT',
+                name="Pro Check Universal 7510",  # Updated name
+                model="M1017",  # Updated model
+                manufacturer="Mopeka IOT",
                 sw_version=None,
                 hw_version=None,
             )
@@ -1428,27 +1441,27 @@ def test_tdr40_air_good_quality():
             DeviceKey(key="signal_strength", device_id=None): SensorValue(
                 device_key=DeviceKey(key="signal_strength", device_id=None),
                 name="Signal Strength",
-                native_value=-50, 
+                native_value=-50,
             ),
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
                 name="Reading quality",
-                native_value=100,  
+                native_value=100,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
                 name="Reading quality raw",
-                native_value=3,  
+                native_value=3,
             ),
             DeviceKey(key="accelerometer_y", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_y", device_id=None),
                 name="Position Y",
-                native_value=32,  
+                native_value=32,
             ),
             DeviceKey(key="accelerometer_x", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_x", device_id=None),
                 name="Position X",
-                native_value=128, 
+                native_value=128,
             ),
         },
         binary_entity_descriptions={

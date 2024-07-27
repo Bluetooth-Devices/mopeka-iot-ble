@@ -8,6 +8,7 @@ MIT License applies.
 
 from enum import Enum
 
+
 class MediumType(Enum):
     """Enumeration of medium types for tank level measurements."""
 
