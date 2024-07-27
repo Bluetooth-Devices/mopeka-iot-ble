@@ -1421,22 +1421,22 @@ def test_tdr40_air_good_quality():
             DeviceKey(key="battery_voltage", device_id=None): SensorValue(
                 device_key=DeviceKey(key="battery_voltage", device_id=None),
                 name="Battery Voltage",
-                native_value=3.53125
+                native_value=3.53125,
             ),
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
-                native_value=729
+                native_value=729,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 name="Temperature",
-                native_value=24
+                native_value=24,
             ),
             DeviceKey(key="battery", device_id=None): SensorValue(
                 device_key=DeviceKey(key="battery", device_id=None),
                 name="Battery",
-                native_value=100
+                native_value=100,
             ),
             DeviceKey(key="signal_strength", device_id=None): SensorValue(
                 device_key=DeviceKey(key="signal_strength", device_id=None),

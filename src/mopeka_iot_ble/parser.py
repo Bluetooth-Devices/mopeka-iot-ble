@@ -8,8 +8,6 @@ MIT License applies.
 
 from __future__ import annotations
 
-from .mopeka_types import MediumType
-
 import logging
 from dataclasses import dataclass
 
@@ -22,6 +20,8 @@ from sensor_state_data import (
     SensorLibrary,
     Units,
 )
+
+from .mopeka_types import MediumType
 
 _LOGGER = logging.getLogger(__name__)
 
