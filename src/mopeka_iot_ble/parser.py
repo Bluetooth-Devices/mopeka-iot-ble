@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-
 from bluetooth_data_tools import short_address
 from bluetooth_sensor_state_data import BluetoothData
 from home_assistant_bluetooth import BluetoothServiceInfo
@@ -21,11 +20,26 @@ from sensor_state_data import (
     Units,
 )
 
+from .models import MediumType
+
 _LOGGER = logging.getLogger(__name__)
 
 
-# converting sensor value to height - contact Mopeka for other fluids/gases
-MOPEKA_TANK_LEVEL_COEFFICIENTS_PROPANE = (0.573045, -0.002822, -0.00000535)
+# converting sensor value to height
+MOPEKA_TANK_LEVEL_COEFFICIENTS = {
+    MediumType.PROPANE: (0.573045, -0.002822, -0.00000535),
+    MediumType.AIR: (0.153096, 0.000327, -0.000000294),
+    MediumType.FRESH_WATER: (0.600592, 0.003124, -0.00001368),
+    MediumType.WASTE_WATER: (0.600592, 0.003124, -0.00001368),
+    MediumType.LIVE_WELL: (0.600592, 0.003124, -0.00001368),
+    MediumType.BLACK_WATER: (0.600592, 0.003124, -0.00001368),
+    MediumType.RAW_WATER: (0.600592, 0.003124, -0.00001368),
+    MediumType.GASOLINE: (0.7373417462, -0.001978229885, 0.00000202162),
+    MediumType.DIESEL: (0.7373417462, -0.001978229885, 0.00000202162),
+    MediumType.LNG: (0.7373417462, -0.001978229885, 0.00000202162),
+    MediumType.OIL: (0.7373417462, -0.001978229885, 0.00000202162),
+    MediumType.HYDRAULIC_OIL: (0.7373417462, -0.001978229885, 0.00000202162),
+}
 
 MOPEKA_MANUFACTURER = 89
 MOKPEKA_PRO_SERVICE_UUID = "0000fee5-0000-1000-8000-00805f9b34fb"
@@ -76,24 +90,28 @@ def tank_level_to_mm(tank_level: int) -> int:
     return tank_level * 10
 
 
-def tank_level_and_temp_to_mm(tank_level: int, temp: int) -> int:
-    """Get the tank level in mm."""
-    return int(
-        tank_level
-        * (
-            MOPEKA_TANK_LEVEL_COEFFICIENTS_PROPANE[0]
-            + (MOPEKA_TANK_LEVEL_COEFFICIENTS_PROPANE[1] * temp)
-            + (MOPEKA_TANK_LEVEL_COEFFICIENTS_PROPANE[2] * (temp**2))
-        )
-    )
+def tank_level_and_temp_to_mm(
+    tank_level: int, temp: int, medium: MediumType = MediumType.PROPANE
+) -> int:
+    """Get the tank level in mm for a given fluid type."""
+    coefs = MOPEKA_TANK_LEVEL_COEFFICIENTS[medium]
+    return int(tank_level * (coefs[0] + (coefs[1] * temp) + (coefs[2] * (temp**2))))
 
 
 class MopekaIOTBluetoothDeviceData(BluetoothData):
     """Data for Mopeka IOT BLE sensors."""
 
+    def __init__(self, medium_type: MediumType = MediumType.PROPANE) -> None:
+        super().__init__()
+        self._medium_type = medium_type
+
     def _start_update(self, service_info: BluetoothServiceInfo) -> None:
         """Update from BLE advertisement data."""
-        _LOGGER.debug("Parsing Mopeka IOT BLE advertisement data: %s", service_info)
+        _LOGGER.debug(
+            "Parsing Mopeka IOT BLE advertisement data: %s, MediumType is: %s",
+            service_info,
+            self._medium_type,
+        )
         manufacturer_data = service_info.manufacturer_data
         service_uuids = service_info.service_uuids
         address = service_info.address
@@ -122,7 +140,7 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
         temp = data[2] & 0x7F
         temp_celsius = temp_to_celsius(temp)
         tank_level = ((int(data[4]) << 8) + data[3]) & 0x3FFF
-        tank_level_mm = tank_level_and_temp_to_mm(tank_level, temp)
+        tank_level_mm = tank_level_and_temp_to_mm(tank_level, temp, self._medium_type)
         reading_quality = data[4] >> 6
         accelerometer_x = data[8]
         accelerometer_y = data[9]
