@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-
 from bluetooth_data_tools import short_address
 from bluetooth_sensor_state_data import BluetoothData
 from home_assistant_bluetooth import BluetoothServiceInfo
@@ -102,17 +101,9 @@ def tank_level_and_temp_to_mm(
 class MopekaIOTBluetoothDeviceData(BluetoothData):
     """Data for Mopeka IOT BLE sensors."""
 
-    def __init__(self) -> None:
+    def __init__(self, medium_type: MediumType = MediumType.PROPANE) -> None:
         super().__init__()
-        self._medium_type = MediumType.PROPANE
-
-    @property
-    def medium_type(self) -> MediumType:
-        return self._medium_type
-
-    @medium_type.setter
-    def medium_type(self, value: MediumType) -> None:
-        self._medium_type = value
+        self._medium_type = medium_type
 
     def _start_update(self, service_info: BluetoothServiceInfo) -> None:
         """Update from BLE advertisement data."""

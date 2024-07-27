@@ -11,7 +11,7 @@ from sensor_state_data import (
     Units,
 )
 
-from mopeka_iot_ble.mopeka_types import MediumType
+from mopeka_iot_ble import MediumType
 
 # Consider renaming the hex method to avoid the override complaint
 from mopeka_iot_ble.parser import (
@@ -1063,8 +1063,7 @@ def test_tank_level_and_temp_to_mm():
 
 
 def test_parser_with_sample_data():
-    parser = MopekaIOTBluetoothDeviceData()
-    parser.medium_type = medium_type
+    assert MopekaIOTBluetoothDeviceData(medium_type)
 
     sample_data = {
         "battery_voltage": battery_to_voltage(battery_raw),
@@ -1090,8 +1089,7 @@ def test_parser_with_sample_data():
 
 # Test entire parser chain
 def test_tdr40_air_bad_quality():
-    parser = MopekaIOTBluetoothDeviceData()
-    parser.medium_type = MediumType.AIR
+    parser = MopekaIOTBluetoothDeviceData(MediumType.AIR)
     service_info = TDR40_AIR_BAD_QUALITY_INFO
     result = parser.update(service_info)
 
@@ -1218,8 +1216,7 @@ def test_tdr40_air_bad_quality():
 
 
 def test_tdr40_air_low_quality():
-    parser = MopekaIOTBluetoothDeviceData()
-    parser.medium_type = MediumType.AIR
+    parser = MopekaIOTBluetoothDeviceData(MediumType.AIR)
     service_info = BluetoothServiceInfo(
         name="",
         address="DA:D8:AC:6A:75:10",
@@ -1354,8 +1351,7 @@ def test_tdr40_air_low_quality():
 
 
 def test_tdr40_air_good_quality():
-    parser = MopekaIOTBluetoothDeviceData()
-    parser.medium_type = MediumType.AIR
+    parser = MopekaIOTBluetoothDeviceData(MediumType.AIR)
     service_info = TDR40_AIR_GOOD_QUALITY_INFO
     result = parser.update(service_info)
 
