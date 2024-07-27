@@ -10,7 +10,7 @@ from sensor_state_data import (
     SensorValue,
     Units,
 )
-
+import pytest
 from mopeka_iot_ble import MediumType
 
 # Consider renaming the hex method to avoid the override complaint
@@ -91,6 +91,37 @@ CHECK_UNIVERSAL_INSTALLED_SERVICE_INFO = BluetoothServiceInfo(
     address="C9:F3:32:E0:F5:09",
     rssi=-63,
     manufacturer_data={89: b"\x0cpC\xb6\xc3\xe0\xf5\t\xfa\xe3"},
+    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
+
+TDR40_AIR_BAD_QUALITY_INFO = BluetoothServiceInfo(
+    name="",
+    address="DA:D8:AC:6A:75:10",
+    rssi=-60,
+    manufacturer_data={89: b"\ns@NMju\x10\x7f\x80"},
+    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
+TDR40_AIR_LOW_QUALITY_INFO = BluetoothServiceInfo(
+    name="",
+    address="DA:D8:AC:6A:75:10",
+    rssi=-44,
+    manufacturer_data={89: b"\x0c`8<\x83*\xea\x8c1\xf8"},
+    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
+TDR40_AIR_GOOD_QUALITY_INFO = BluetoothServiceInfo(
+    name="",
+    address="DA:D8:AC:6A:75:10",
+    rssi=-50,
+    manufacturer_data={89: b"\nq@}\xd0ju\x10\x80 "},
     service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
     service_data={},
     source="local",
@@ -990,66 +1021,53 @@ def test_lippert():
     )
 
 
-TDR40_AIR_BAD_QUALITY_INFO = BluetoothServiceInfo(
-    name="",
-    address="DA:D8:AC:6A:75:10",
-    rssi=-60,
-    manufacturer_data={89: b"\ns@NMju\x10\x7f\x80"},
-    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
-    service_data={},
-    source="local",
+@pytest.mark.parametrize(
+    "battery_raw, expected_voltage",
+    [
+        (89, 2.78125),
+        (90, 2.8125),
+        (91, 2.84375),
+        (92, 2.875),
+        (93, 2.90625),
+        (94, 2.9375),
+        (95, 2.96875),
+        (96, 3.0),
+        (97, 3.03125),
+        (98, 3.0625),
+        (99, 3.09375),
+        (100, 3.125),
+    ],
 )
-
-TDR40_AIR_LOW_QUALITY_INFO = BluetoothServiceInfo(
-    name="",
-    address="DA:D8:AC:6A:75:10",
-    rssi=-44,
-    manufacturer_data={89: b"\x0c`8<\x83*\xea\x8c1\xf8"},
-    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
-    service_data={},
-    source="local",
-)
-
-TDR40_AIR_GOOD_QUALITY_INFO = BluetoothServiceInfo(
-    name="",
-    address="DA:D8:AC:6A:75:10",
-    rssi=-50,
-    manufacturer_data={89: b"\nq@}\xd0ju\x10\x80 "},
-    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
-    service_data={},
-    source="local",
-)
-
-# Test parser specifics
-battery_raw = 89  # example battery raw value
-temperature_raw = 77  # example temperature raw value
-tank_level_raw = 3145  # example tank level raw value
-medium_type = MediumType.AIR
-
-
-def test_battery_to_voltage():
+def test_battery_to_voltage(battery_raw: int, expected_voltage: float) -> None:
     voltage = battery_to_voltage(battery_raw)
-    assert voltage == 2.78125
+    assert voltage == expected_voltage
 
 
 def test_battery_to_percentage():
+    battery_raw = 89  # example battery raw value
     percentage = battery_to_percentage(battery_raw)
     assert percentage == 89.4
 
 
 def test_temp_to_celsius():
+    temperature_raw = 77  # example temperature raw value
+
     celsius = temp_to_celsius(temperature_raw)
     assert celsius == 37
 
 
 def test_tank_level_to_mm():
+    tank_level_raw = 3145  # example tank level raw value
     mm = tank_level_to_mm(tank_level_raw)
     assert mm == 31450  # tank_level_raw * 10
 
 
 def test_tank_level_and_temp_to_mm():
+    temperature_raw = 77  # example temperature raw value
+    tank_level_raw = 3145  # example tank level raw value
+
     tank_level_mm = tank_level_and_temp_to_mm(
-        tank_level_raw, temperature_raw, medium_type
+        tank_level_raw, temperature_raw, MediumType.AIR
     )
     expected_mm = int(
         tank_level_raw
@@ -1063,6 +1081,10 @@ def test_tank_level_and_temp_to_mm():
 
 
 def test_parser_with_sample_data():
+    medium_type = MediumType.AIR
+    battery_raw = 89  # example battery raw value
+    tank_level_raw = 3145  # example tank level raw value
+    temperature_raw = 77  # example temperature raw value
     assert MopekaIOTBluetoothDeviceData(medium_type)
 
     sample_data = {
