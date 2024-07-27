@@ -1,5 +1,6 @@
 """Types for Mopeka IOT BLE advertisements.
 
+
 Thanks to https://github.com/spbrogan/mopeka_pro_check for
 help decoding the advertisements.
 
@@ -7,6 +8,7 @@ MIT License applies.
 """
 
 from enum import Enum
+
 
 class MediumType(Enum):
     """Enumeration of medium types for tank level measurements."""
