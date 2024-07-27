@@ -15,15 +15,10 @@ from mopeka_iot_ble.mopeka_types import MediumType
 
 # Consider renaming the hex method to avoid the override complaint
 from mopeka_iot_ble.parser import (
-    mopeka_iot_ble.parser,  # pylint: disable=redefined-builtin
-)
-from mopeka_iot_ble.parser import (  # pylint: disable=redefined-builtin
     MopekaIOTBluetoothDeviceData,
     battery_to_percentage,
     battery_to_voltage,
-    from,
     hex,
-    import,
     tank_level_and_temp_to_mm,
     tank_level_to_mm,
     temp_to_celsius,
@@ -995,7 +990,6 @@ def test_lippert():
     )
 
 
-
 TDR40_AIR_BAD_QUALITY_INFO = BluetoothServiceInfo(
     name="",
     address="DA:D8:AC:6A:75:10",
@@ -1033,11 +1027,9 @@ tank_level_raw = 3145  # example tank level raw value
 medium_type = MediumType.AIR
 
 
-
 def test_battery_to_voltage():
     voltage = battery_to_voltage(battery_raw)
     assert voltage == 2.78125
-
 
 
 def test_battery_to_percentage():
@@ -1045,17 +1037,14 @@ def test_battery_to_percentage():
     assert percentage == 89.4
 
 
-
 def test_temp_to_celsius():
     celsius = temp_to_celsius(temperature_raw)
     assert celsius == 37
 
 
-
 def test_tank_level_to_mm():
     mm = tank_level_to_mm(tank_level_raw)
     assert mm == 31450  # tank_level_raw * 10
-
 
 
 def test_tank_level_and_temp_to_mm():
@@ -1071,7 +1060,6 @@ def test_tank_level_and_temp_to_mm():
         )
     )
     assert tank_level_mm == expected_mm
-
 
 
 def test_parser_with_sample_data():
@@ -1098,7 +1086,6 @@ def test_parser_with_sample_data():
             + (-0.000000294 * (temperature_raw**2))  # coefs[2] * (temp ** 2)
         )
     )
-
 
 
 # Test entire parser chain
@@ -1228,7 +1215,6 @@ def test_tdr40_air_bad_quality():
         },
         events={},
     )
-
 
 
 def test_tdr40_air_low_quality():
