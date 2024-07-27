@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.0 (2024-07-27)
+
+### Feature
+
+* Add support for other fluids and air ([#21](https://github.com/Bluetooth-Devices/mopeka-iot-ble/issues/21)) ([`5c67178`](https://github.com/Bluetooth-Devices/mopeka-iot-ble/commit/5c671785665de3446622dc513932f271b6a176f0))
+
 ## v0.7.0 (2024-02-03)
 
 ### Feature
