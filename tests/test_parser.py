@@ -1086,20 +1086,12 @@ def test_parser_with_sample_data():
     tank_level_raw = 3145  # example tank level raw value
     temperature_raw = 77  # example temperature raw value
     assert MopekaIOTBluetoothDeviceData(medium_type)
-
-    sample_data = {
-        "battery_voltage": battery_to_voltage(battery_raw),
-        "battery_percentage": battery_to_percentage(battery_raw),
-        "temperature": temp_to_celsius(temperature_raw),
-        "tank_level_mm": tank_level_and_temp_to_mm(
-            tank_level_raw, temperature_raw, medium_type
-        ),
-    }
-
-    assert sample_data["battery_voltage"] == 2.78125
-    assert sample_data["battery_percentage"] == 89.4
-    assert sample_data["temperature"] == 37
-    assert sample_data["tank_level_mm"] == int(
+    assert battery_to_voltage(battery_raw) == 2.78125
+    assert battery_to_percentage(battery_raw) == 89.4
+    assert temp_to_celsius(temperature_raw) == 37
+    assert tank_level_and_temp_to_mm(
+        tank_level_raw, temperature_raw, medium_type
+    ) == int(
         tank_level_raw
         * (
             0.153096  # coefs[0] for MediumType.AIR
