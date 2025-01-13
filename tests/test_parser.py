@@ -214,12 +214,12 @@ def test_pro_bad_quality():
         entity_values={
             DeviceKey(key="battery_voltage", device_id=None): SensorValue(
                 device_key=DeviceKey(key="battery_voltage", device_id=None),
-                name="Battery " "Voltage",
+                name="Battery Voltage",
                 native_value=3.5625,
             ),
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
-                name="Tank " "Level",
+                name="Tank Level",
                 native_value=None,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
@@ -234,27 +234,27 @@ def test_pro_bad_quality():
             ),
             DeviceKey(key="signal_strength", device_id=None): SensorValue(
                 device_key=DeviceKey(key="signal_strength", device_id=None),
-                name="Signal " "Strength",
+                name="Signal Strength",
                 native_value=-63,
             ),
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
-                name="Reading " "quality",
+                name="Reading quality",
                 native_value=0,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
-                name="Reading " "quality " "raw",
+                name="Reading quality raw",
                 native_value=0,
             ),
             DeviceKey(key="accelerometer_y", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_y", device_id=None),
-                name="Position " "Y",
+                name="Position Y",
                 native_value=216,
             ),
             DeviceKey(key="accelerometer_x", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_x", device_id=None),
-                name="Position " "X",
+                name="Position X",
                 native_value=240,
             ),
         },
@@ -340,12 +340,12 @@ def test_pro_low_quality():
         entity_values={
             DeviceKey(key="battery_voltage", device_id=None): SensorValue(
                 device_key=DeviceKey(key="battery_voltage", device_id=None),
-                name="Battery " "Voltage",
+                name="Battery Voltage",
                 native_value=3.5625,
             ),
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
-                name="Tank " "Level",
+                name="Tank Level",
                 native_value=0,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
@@ -360,27 +360,27 @@ def test_pro_low_quality():
             ),
             DeviceKey(key="signal_strength", device_id=None): SensorValue(
                 device_key=DeviceKey(key="signal_strength", device_id=None),
-                name="Signal " "Strength",
+                name="Signal Strength",
                 native_value=-63,
             ),
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
-                name="Reading " "quality",
+                name="Reading quality",
                 native_value=33,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
-                name="Reading " "quality " "raw",
+                name="Reading quality raw",
                 native_value=1,
             ),
             DeviceKey(key="accelerometer_y", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_y", device_id=None),
-                name="Position " "Y",
+                name="Position Y",
                 native_value=216,
             ),
             DeviceKey(key="accelerometer_x", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_x", device_id=None),
-                name="Position " "X",
+                name="Position X",
                 native_value=240,
             ),
         },
@@ -466,12 +466,12 @@ def test_pro_good_quality():
         entity_values={
             DeviceKey(key="battery_voltage", device_id=None): SensorValue(
                 device_key=DeviceKey(key="battery_voltage", device_id=None),
-                name="Battery " "Voltage",
+                name="Battery Voltage",
                 native_value=3.5625,
             ),
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
-                name="Tank " "Level",
+                name="Tank Level",
                 native_value=0,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
@@ -486,27 +486,27 @@ def test_pro_good_quality():
             ),
             DeviceKey(key="signal_strength", device_id=None): SensorValue(
                 device_key=DeviceKey(key="signal_strength", device_id=None),
-                name="Signal " "Strength",
+                name="Signal Strength",
                 native_value=-63,
             ),
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
-                name="Reading " "quality",
+                name="Reading quality",
                 native_value=100,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
-                name="Reading " "quality " "raw",
+                name="Reading quality raw",
                 native_value=3,
             ),
             DeviceKey(key="accelerometer_y", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_y", device_id=None),
-                name="Position " "Y",
+                name="Position Y",
                 native_value=216,
             ),
             DeviceKey(key="accelerometer_x", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_x", device_id=None),
-                name="Position " "X",
+                name="Position X",
                 native_value=240,
             ),
         },
@@ -592,12 +592,12 @@ def test_pro_installed():
         entity_values={
             DeviceKey(key="battery_voltage", device_id=None): SensorValue(
                 device_key=DeviceKey(key="battery_voltage", device_id=None),
-                name="Battery " "Voltage",
+                name="Battery Voltage",
                 native_value=3.5,
             ),
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
-                name="Tank " "Level",
+                name="Tank Level",
                 native_value=341,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
@@ -612,27 +612,27 @@ def test_pro_installed():
             ),
             DeviceKey(key="signal_strength", device_id=None): SensorValue(
                 device_key=DeviceKey(key="signal_strength", device_id=None),
-                name="Signal " "Strength",
+                name="Signal Strength",
                 native_value=-63,
             ),
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
-                name="Reading " "quality",
+                name="Reading quality",
                 native_value=100,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
-                name="Reading " "quality " "raw",
+                name="Reading quality raw",
                 native_value=3,
             ),
             DeviceKey(key="accelerometer_y", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_y", device_id=None),
-                name="Position " "Y",
+                name="Position Y",
                 native_value=227,
             ),
             DeviceKey(key="accelerometer_x", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_x", device_id=None),
-                name="Position " "X",
+                name="Position X",
                 native_value=250,
             ),
         },
@@ -718,12 +718,12 @@ def test_check_universal_installed():
         entity_values={
             DeviceKey(key="battery_voltage", device_id=None): SensorValue(
                 device_key=DeviceKey(key="battery_voltage", device_id=None),
-                name="Battery " "Voltage",
+                name="Battery Voltage",
                 native_value=3.5,
             ),
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
-                name="Tank " "Level",
+                name="Tank Level",
                 native_value=341,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
@@ -738,27 +738,27 @@ def test_check_universal_installed():
             ),
             DeviceKey(key="signal_strength", device_id=None): SensorValue(
                 device_key=DeviceKey(key="signal_strength", device_id=None),
-                name="Signal " "Strength",
+                name="Signal Strength",
                 native_value=-63,
             ),
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
-                name="Reading " "quality",
+                name="Reading quality",
                 native_value=100,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
-                name="Reading " "quality " "raw",
+                name="Reading quality raw",
                 native_value=3,
             ),
             DeviceKey(key="accelerometer_y", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_y", device_id=None),
-                name="Position " "Y",
+                name="Position Y",
                 native_value=227,
             ),
             DeviceKey(key="accelerometer_x", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_x", device_id=None),
-                name="Position " "X",
+                name="Position X",
                 native_value=250,
             ),
         },
@@ -844,12 +844,12 @@ def test_check_installed():
         entity_values={
             DeviceKey(key="battery_voltage", device_id=None): SensorValue(
                 device_key=DeviceKey(key="battery_voltage", device_id=None),
-                name="Battery " "Voltage",
+                name="Battery Voltage",
                 native_value=3.5,
             ),
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
-                name="Tank " "Level",
+                name="Tank Level",
                 native_value=341,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
@@ -864,27 +864,27 @@ def test_check_installed():
             ),
             DeviceKey(key="signal_strength", device_id=None): SensorValue(
                 device_key=DeviceKey(key="signal_strength", device_id=None),
-                name="Signal " "Strength",
+                name="Signal Strength",
                 native_value=-63,
             ),
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
-                name="Reading " "quality",
+                name="Reading quality",
                 native_value=100,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
-                name="Reading " "quality " "raw",
+                name="Reading quality raw",
                 native_value=3,
             ),
             DeviceKey(key="accelerometer_y", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_y", device_id=None),
-                name="Position " "Y",
+                name="Position Y",
                 native_value=227,
             ),
             DeviceKey(key="accelerometer_x", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_x", device_id=None),
-                name="Position " "X",
+                name="Position X",
                 native_value=250,
             ),
         },
@@ -970,12 +970,12 @@ def test_lippert():
         entity_values={
             DeviceKey(key="battery_voltage", device_id=None): SensorValue(
                 device_key=DeviceKey(key="battery_voltage", device_id=None),
-                name="Battery " "Voltage",
+                name="Battery Voltage",
                 native_value=3.5,
             ),
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
-                name="Tank " "Level",
+                name="Tank Level",
                 native_value=341,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
@@ -990,27 +990,27 @@ def test_lippert():
             ),
             DeviceKey(key="signal_strength", device_id=None): SensorValue(
                 device_key=DeviceKey(key="signal_strength", device_id=None),
-                name="Signal " "Strength",
+                name="Signal Strength",
                 native_value=-63,
             ),
             DeviceKey(key="reading_quality", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality", device_id=None),
-                name="Reading " "quality",
+                name="Reading quality",
                 native_value=100,
             ),
             DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
                 device_key=DeviceKey(key="reading_quality_raw", device_id=None),
-                name="Reading " "quality " "raw",
+                name="Reading quality raw",
                 native_value=3,
             ),
             DeviceKey(key="accelerometer_y", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_y", device_id=None),
-                name="Position " "Y",
+                name="Position Y",
                 native_value=227,
             ),
             DeviceKey(key="accelerometer_x", device_id=None): SensorValue(
                 device_key=DeviceKey(key="accelerometer_x", device_id=None),
-                name="Position " "X",
+                name="Position X",
                 native_value=250,
             ),
         },
