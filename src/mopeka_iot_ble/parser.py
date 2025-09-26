@@ -1,4 +1,5 @@
-"""Parser for Gmopeka_iot BLE advertisements.
+"""
+Parser for Gmopeka_iot BLE advertisements.
 
 Thanks to https://github.com/spbrogan/mopeka_pro_check for
 help decoding the advertisements.
@@ -10,6 +11,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+
 from bluetooth_data_tools import short_address
 from bluetooth_sensor_state_data import BluetoothData
 from home_assistant_bluetooth import BluetoothServiceInfo
@@ -43,6 +45,7 @@ MOPEKA_TANK_LEVEL_COEFFICIENTS = {
 
 MOPEKA_MANUFACTURER = 89
 MOKPEKA_PRO_SERVICE_UUID = "0000fee5-0000-1000-8000-00805f9b34fb"
+MOPEKA_M1001_SERVICE_UUID = "0000ada0-0000-1000-8000-00805f9b34fb"
 
 
 @dataclass
@@ -53,6 +56,7 @@ class MopekaDevice:
 
 
 DEVICE_TYPES = {
+    0x1: MopekaDevice("M1001", "M1001", 10),
     0x3: MopekaDevice("M1017", "Pro Check", 10),
     0x4: MopekaDevice("Pro-200", "Pro-200", 10),
     0x5: MopekaDevice("Pro H20", "Pro Check H2O", 10),
@@ -67,7 +71,7 @@ DEVICE_TYPES = {
 
 def hex(data: bytes) -> str:
     """Return a string object containing two hexadecimal digits for each byte in the instance."""
-    return "b'{}'".format("".join(f"\\x{b:02x}" for b in data))  # noqa: E231
+    return "b'{}'".format("".join(f"\\x{b:02x}" for b in data))
 
 
 def battery_to_voltage(battery: int) -> float:
@@ -115,9 +119,9 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
         manufacturer_data = service_info.manufacturer_data
         service_uuids = service_info.service_uuids
         address = service_info.address
-        if (
-            MOPEKA_MANUFACTURER not in manufacturer_data
-            or MOKPEKA_PRO_SERVICE_UUID not in service_uuids
+        if MOPEKA_MANUFACTURER not in manufacturer_data or (
+            MOKPEKA_PRO_SERVICE_UUID not in service_uuids
+            and MOPEKA_M1001_SERVICE_UUID not in service_uuids
         ):
             _LOGGER.debug("Not a Mopeka IOT BLE advertisement: %s", service_info)
             return
