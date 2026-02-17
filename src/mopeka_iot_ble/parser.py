@@ -1,4 +1,5 @@
-"""Parser for Gmopeka_iot BLE advertisements.
+"""
+Parser for Gmopeka_iot BLE advertisements.
 
 Thanks to https://github.com/spbrogan/mopeka_pro_check for
 help decoding the advertisements.
@@ -10,6 +11,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+
 from bluetooth_data_tools import short_address
 from bluetooth_sensor_state_data import BluetoothData
 from home_assistant_bluetooth import BluetoothServiceInfo
@@ -62,12 +64,13 @@ DEVICE_TYPES = {
     0xA: MopekaDevice("TD40/TD200", "TD40/TD200", 10),
     0xB: MopekaDevice("TD40/TD200", "TD40/TD200 with Cellular", 10),
     0xC: MopekaDevice("M1017", "Pro Check Universal", 10),
+    0x12: MopekaDevice("Pro-200", "Pro-200B", 10),
 }
 
 
 def hex(data: bytes) -> str:
     """Return a string object containing two hexadecimal digits for each byte in the instance."""
-    return "b'{}'".format("".join(f"\\x{b:02x}" for b in data))  # noqa: E231
+    return "b'{}'".format("".join(f"\\x{b:02x}" for b in data))
 
 
 def battery_to_voltage(battery: int) -> float:
