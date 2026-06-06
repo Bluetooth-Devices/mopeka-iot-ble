@@ -1252,8 +1252,7 @@ def test_tank_level_and_temp_to_mm_all_mediums(medium: MediumType) -> None:
     tank_level_raw = 3145
     c0, c1, c2 = MOPEKA_TANK_LEVEL_COEFFICIENTS[medium]
     expected_mm = int(
-        tank_level_raw
-        * (c0 + (c1 * temperature_raw) + (c2 * (temperature_raw**2)))
+        tank_level_raw * (c0 + (c1 * temperature_raw) + (c2 * (temperature_raw**2)))
     )
     assert (
         tank_level_and_temp_to_mm(tank_level_raw, temperature_raw, medium)
