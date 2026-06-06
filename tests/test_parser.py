@@ -1628,3 +1628,80 @@ def test_tdr40_air_good_quality():
         },
         events={},
     )
+
+
+# Advertisements the parser must reject without emitting any device or sensor.
+# A valid Mopeka payload uses manufacturer id 89, service UUID fee5, a known
+# model byte (here 0x08 = Pro Plus) and the model's expected advertisement
+# length (10 bytes). Each fixture below breaks exactly one of those rules.
+
+NON_MOPEKA_MANUFACTURER_INFO = BluetoothServiceInfo(
+    name="",
+    address="C9:F3:32:E0:F5:09",
+    rssi=-63,
+    # Manufacturer id 76 (Apple) instead of 89 (Mopeka).
+    manufacturer_data={76: b"\x08rF\x000\xe0\xf5\t\xf0\xd8"},
+    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
+MISSING_SERVICE_UUID_INFO = BluetoothServiceInfo(
+    name="",
+    address="C9:F3:32:E0:F5:09",
+    rssi=-63,
+    manufacturer_data={89: b"\x08rF\x000\xe0\xf5\t\xf0\xd8"},
+    # No Mopeka Pro service UUID present.
+    service_uuids=[],
+    service_data={},
+    source="local",
+)
+
+UNSUPPORTED_MODEL_INFO = BluetoothServiceInfo(
+    name="",
+    address="C9:F3:32:E0:F5:09",
+    rssi=-63,
+    # Leading model byte 0x99 is not in DEVICE_TYPES.
+    manufacturer_data={89: b"\x99rF\x000\xe0\xf5\t\xf0\xd8"},
+    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
+WRONG_LENGTH_INFO = BluetoothServiceInfo(
+    name="",
+    address="C9:F3:32:E0:F5:09",
+    rssi=-63,
+    # Model 0x08 expects a 10-byte advertisement; this one is 8 bytes.
+    manufacturer_data={89: b"\x08rF\x000\xe0\xf5\t"},
+    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
+
+@pytest.mark.parametrize(
+    "service_info",
+    [
+        NON_MOPEKA_MANUFACTURER_INFO,
+        MISSING_SERVICE_UUID_INFO,
+        UNSUPPORTED_MODEL_INFO,
+        WRONG_LENGTH_INFO,
+    ],
+    ids=[
+        "non_mopeka_manufacturer",
+        "missing_service_uuid",
+        "unsupported_model",
+        "wrong_length",
+    ],
+)
+def test_parser_rejects_invalid_advertisement(service_info):
+    """A malformed or foreign advertisement yields no device and no sensors."""
+    parser = MopekaIOTBluetoothDeviceData()
+    result = parser.update(service_info)
+
+    assert result.devices == {}
+    assert result.entity_descriptions == {}
+    assert result.entity_values == {}
+    assert result.binary_entity_descriptions == {}
+    assert result.binary_entity_values == {}
