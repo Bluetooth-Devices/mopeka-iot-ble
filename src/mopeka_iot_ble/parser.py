@@ -68,7 +68,7 @@ DEVICE_TYPES = {
 }
 
 
-def hex(data: bytes) -> str:
+def format_hex(data: bytes) -> str:
     """Return a string object containing two hexadecimal digits for each byte in the instance."""
     return "b'{}'".format("".join(f"\\x{b:02x}" for b in data))
 

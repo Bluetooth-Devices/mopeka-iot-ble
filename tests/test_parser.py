@@ -1,12 +1,11 @@
 from bluetooth_sensor_state_data import BluetoothServiceInfo, SensorUpdate
 from mopeka_iot_ble import MediumType
 
-# Consider renaming the hex method to avoid the override complaint
 from mopeka_iot_ble.parser import (
     MopekaIOTBluetoothDeviceData,
     battery_to_percentage,
     battery_to_voltage,
-    hex,
+    format_hex,
     tank_level_and_temp_to_mm,
     tank_level_to_mm,
     temp_to_celsius,
@@ -149,9 +148,9 @@ TDR40_AIR_GOOD_QUALITY_INFO = BluetoothServiceInfo(
 )
 
 
-def test_hex():
+def test_format_hex():
     assert (
-        hex(b"\x08rF\x000\xe0\xf5\t\xf0\xd8")
+        format_hex(b"\x08rF\x000\xe0\xf5\t\xf0\xd8")
         == "b'\\x08\\x72\\x46\\x00\\x30\\xe0\\xf5\\x09\\xf0\\xd8'"
     )
 
