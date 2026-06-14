@@ -9,6 +9,7 @@ _EXAMPLE_PATH = (
     Path(__file__).resolve().parent.parent / "examples" / "decode_advertisement.py"
 )
 _spec = importlib.util.spec_from_file_location("decode_advertisement", _EXAMPLE_PATH)
+assert _spec is not None and _spec.loader is not None
 decode_example = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(decode_example)
 
