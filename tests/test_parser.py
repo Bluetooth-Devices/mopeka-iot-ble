@@ -160,6 +160,66 @@ def test_can_create():
     MopekaIOTBluetoothDeviceData()
 
 
+def _empty_update(update: SensorUpdate) -> bool:
+    """A rejected advertisement yields no sensor values and no device metadata."""
+    return not update.entity_values and not update.entity_descriptions
+
+
+def test_not_a_mopeka_advertisement():
+    """Non-Mopeka manufacturer / service data is ignored without producing sensors."""
+    parser = MopekaIOTBluetoothDeviceData()
+    service_info = BluetoothServiceInfo(
+        name="",
+        address="C9:F3:32:E0:F5:09",
+        rssi=-63,
+        manufacturer_data={76: b"\x08rF\x000\xe0\xf5\t\xf0\xd8"},
+        service_uuids=[],
+        service_data={},
+        source="local",
+    )
+    assert _empty_update(parser.update(service_info))
+
+
+def test_unsupported_mopeka_model():
+    """A Mopeka advert with an unknown model byte is ignored."""
+    parser = MopekaIOTBluetoothDeviceData()
+    service_info = BluetoothServiceInfo(
+        name="",
+        address="C9:F3:32:E0:F5:09",
+        rssi=-63,
+        # Model byte 0xFF is not in DEVICE_TYPES.
+        manufacturer_data={89: b"\xffrF\x000\xe0\xf5\t\xf0\xd8"},
+        service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
+        service_data={},
+        source="local",
+    )
+    assert _empty_update(parser.update(service_info))
+
+
+def test_supported_model_wrong_length_is_logged(caplog):
+    """A known model sending an unexpected-length advert is skipped with a debug log.
+
+    Previously this path returned silently, so a supported device sending a
+    malformed or firmware-variant advert vanished with no diagnostic trace.
+    """
+    parser = MopekaIOTBluetoothDeviceData()
+    service_info = BluetoothServiceInfo(
+        name="",
+        address="C9:F3:32:E0:F5:09",
+        rssi=-63,
+        # Model byte 0x08 (Pro Plus) is known, but the payload is only 5 bytes
+        # instead of the expected 10.
+        manufacturer_data={89: b"\x08rF\x000"},
+        service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
+        service_data={},
+        source="local",
+    )
+    with caplog.at_level("DEBUG"):
+        update = parser.update(service_info)
+    assert _empty_update(update)
+    assert "unexpected length" in caplog.text
+
+
 def test_pro_bad_quality():
     parser = MopekaIOTBluetoothDeviceData()
     service_info = PRO_SERVICE_BAD_QUALITY_INFO
