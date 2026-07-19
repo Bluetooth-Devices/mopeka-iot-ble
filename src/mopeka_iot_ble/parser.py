@@ -108,8 +108,12 @@ def std_raw_voltage_to_voltage(raw_voltage: int) -> float:
 
 
 def std_raw_temp_to_celsius(raw_temp: int) -> float:
-    """Convert a Standard Check 6-bit raw temperature to celsius."""
-    return (raw_temp - 25) * 1.776964
+    """Convert a Standard Check 6-bit raw temperature to celsius.
+
+    Zero is the sensor's out-of-range sentinel and means -40C, not the -44.4C
+    the linear scale would extrapolate to.
+    """
+    return -40.0 if raw_temp == 0 else (raw_temp - 25) * 1.776964
 
 
 def std_echo_sweep(data: bytes) -> list[tuple[int, int]]:

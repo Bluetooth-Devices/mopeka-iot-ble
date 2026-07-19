@@ -1693,6 +1693,22 @@ def test_std_check_temperature_is_stable_off_tank() -> None:
     assert a["temperature"] == b["temperature"] == 24.9
 
 
+def test_std_check_zero_raw_temperature_is_out_of_range_sentinel() -> None:
+    """A raw temperature of zero means -40C, not the extrapolated -44.4C."""
+    raw = bytearray(bytes.fromhex("0002a5271e28d080051c64904106111cb08003a9294d0a"))
+    raw[3] &= 0xC0
+    info = BluetoothServiceInfo(
+        name="",
+        address="34:08:E1:29:4D:0A",
+        rssi=-70,
+        manufacturer_data={13: bytes(raw)},
+        service_uuids=["0000ada0-0000-1000-8000-00805f9b34fb"],
+        service_data={},
+        source="local",
+    )
+    assert _values(MopekaIOTBluetoothDeviceData().update(info))["temperature"] == -40.0
+
+
 def test_std_check_on_tank_reads_tank_temperature() -> None:
     parser = MopekaIOTBluetoothDeviceData()
     values = _values(parser.update(STD_CHECK_ON_TANK_INFO))
