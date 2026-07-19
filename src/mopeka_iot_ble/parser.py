@@ -46,6 +46,12 @@ MOPEKA_TANK_LEVEL_COEFFICIENTS = {
 MOPEKA_MANUFACTURER = 89
 MOKPEKA_PRO_SERVICE_UUID = "0000fee5-0000-1000-8000-00805f9b34fb"
 
+# The Standard Check family advertises under Texas Instruments' company ID
+# rather than Mopeka's, so the service UUID and length are part of the gate.
+MOPEKA_STD_MANUFACTURER = 0x000D
+MOPEKA_STD_SERVICE_UUID = "0000ada0-0000-1000-8000-00805f9b34fb"
+MOPEKA_STD_ADV_LENGTH = 23
+
 
 @dataclass
 class MopekaDevice:
@@ -67,6 +73,14 @@ DEVICE_TYPES = {
     0x12: MopekaDevice("Pro-200", "Pro-200B", 10),
 }
 
+# Standard Check sensor types, keyed on byte 1 of the advertisement.
+STD_DEVICE_TYPES = {
+    0x02: MopekaDevice("M1001", "Standard Check", MOPEKA_STD_ADV_LENGTH),
+    0x03: MopekaDevice("M1001", "Standard Check XL", MOPEKA_STD_ADV_LENGTH),
+    0x44: MopekaDevice("M1001", "Standard Check", MOPEKA_STD_ADV_LENGTH),
+    0x46: MopekaDevice("M1001", "Standard Check E-Trailer", MOPEKA_STD_ADV_LENGTH),
+}
+
 
 def hex(data: bytes) -> str:
     """Return a string object containing two hexadecimal digits for each byte in the instance."""
@@ -86,6 +100,16 @@ def battery_to_percentage(battery: int) -> float:
 def temp_to_celsius(temp: int) -> int:
     """Convert temperature value to celsius."""
     return temp - 40
+
+
+def std_raw_voltage_to_voltage(raw_voltage: int) -> float:
+    """Convert a Standard Check raw voltage byte to volts."""
+    return raw_voltage / 256.0 * 2.0 + 1.5
+
+
+def std_raw_temp_to_celsius(raw_temp: int) -> float:
+    """Convert a Standard Check 6-bit raw temperature to celsius."""
+    return (raw_temp - 25) * 1.776964
 
 
 def tank_level_to_mm(tank_level: int) -> int:
@@ -118,6 +142,14 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
         manufacturer_data = service_info.manufacturer_data
         service_uuids = service_info.service_uuids
         address = service_info.address
+        if (
+            MOPEKA_STD_MANUFACTURER in manufacturer_data
+            and MOPEKA_STD_SERVICE_UUID in service_uuids
+        ):
+            self._update_std_check(
+                manufacturer_data[MOPEKA_STD_MANUFACTURER], address, service_info
+            )
+            return
         if (
             MOPEKA_MANUFACTURER not in manufacturer_data
             or MOKPEKA_PRO_SERVICE_UUID not in service_uuids
@@ -200,3 +232,51 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
             "Reading quality",
         )
         # Reading stars = (3-reading_quality) * "★" + (reading_quality * "⭐")
+
+    def _update_std_check(
+        self, data: bytes, address: str, service_info: BluetoothServiceInfo
+    ) -> None:
+        """Update from a Mopeka Standard Check advertisement.
+
+        Layout (23 bytes): byte 1 is the sensor type, byte 2 the raw battery
+        voltage, byte 3 packs a 6-bit raw temperature with the slow-update and
+        sync-pressed flags. Bytes 4-18 carry the raw ultrasonic echo sweep,
+        which is not decoded yet -- no tank level is reported for these models.
+        """
+        if len(data) != MOPEKA_STD_ADV_LENGTH:
+            _LOGGER.debug(
+                "Unexpected Mopeka Standard Check advertisement length: %s",
+                service_info,
+            )
+            return
+        if not (device_type := STD_DEVICE_TYPES.get(data[1])):
+            _LOGGER.debug(
+                "Unsupported Mopeka Standard Check advertisement: %s", service_info
+            )
+            return
+
+        self.set_device_manufacturer("Mopeka IOT")
+        self.set_device_type(device_type.model)
+        self.set_device_name(f"{device_type.name} {short_address(address)}")
+
+        battery_voltage = std_raw_voltage_to_voltage(data[2])
+        self.update_predefined_sensor(
+            SensorLibrary.TEMPERATURE__CELSIUS,
+            round(std_raw_temp_to_celsius(data[3] & 0x3F), 1),
+        )
+        self.update_predefined_sensor(
+            SensorLibrary.BATTERY__PERCENTAGE,
+            round(max(0, min(100, ((battery_voltage - 2.2) / 0.65) * 100)), 1),
+        )
+        self.update_predefined_sensor(
+            SensorLibrary.VOLTAGE__ELECTRIC_POTENTIAL_VOLT,
+            round(battery_voltage, 2),
+            name="Battery Voltage",
+            key="battery_voltage",
+        )
+        self.update_predefined_binary_sensor(
+            BinarySensorDeviceClass.OCCUPANCY,
+            bool(data[3] & 0x80),
+            key="button_pressed",
+            name="Button pressed",
+        )

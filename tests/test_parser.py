@@ -1628,3 +1628,130 @@ def test_tdr40_air_good_quality():
         },
         events={},
     )
+
+
+STD_CHECK_OFF_TANK_INFO = BluetoothServiceInfo(
+    name="",
+    address="34:08:E1:29:4D:0A",
+    rssi=-70,
+    manufacturer_data={
+        13: bytes.fromhex("00029d270c148081021d08b08104074c40c002a9294d0a")
+    },
+    service_uuids=["0000ada0-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
+STD_CHECK_ON_TANK_INFO = BluetoothServiceInfo(
+    name="",
+    address="34:08:E1:29:4D:0A",
+    rssi=-78,
+    manufacturer_data={
+        13: bytes.fromhex("00028c212854f701103e1c3001011330d08106b8294d0a")
+    },
+    service_uuids=["0000ada0-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
+
+def _values(update: SensorUpdate) -> dict[str, object]:
+    return {key.key: value.native_value for key, value in update.entity_values.items()}
+
+
+def test_std_check_identifies_device() -> None:
+    parser = MopekaIOTBluetoothDeviceData()
+    update = parser.update(STD_CHECK_OFF_TANK_INFO)
+    info = update.devices[None]
+    assert info.manufacturer == "Mopeka IOT"
+    assert info.model == "M1001"
+    assert info.name == "Standard Check 4D0A"
+
+
+def test_std_check_decodes_battery_and_temperature() -> None:
+    parser = MopekaIOTBluetoothDeviceData()
+    values = _values(parser.update(STD_CHECK_OFF_TANK_INFO))
+    assert values["battery_voltage"] == 2.73
+    assert values["temperature"] == 24.9
+
+
+def test_std_check_temperature_is_stable_off_tank() -> None:
+    """Off-tank captures months apart must report the same temperature."""
+    september = BluetoothServiceInfo(
+        name="",
+        address="34:08:E1:29:4D:0A",
+        rssi=-70,
+        manufacturer_data={
+            13: bytes.fromhex("0002a5271e28d080051c64904106111cb08003a9294d0a")
+        },
+        service_uuids=["0000ada0-0000-1000-8000-00805f9b34fb"],
+        service_data={},
+        source="local",
+    )
+    a = _values(MopekaIOTBluetoothDeviceData().update(september))
+    b = _values(MopekaIOTBluetoothDeviceData().update(STD_CHECK_OFF_TANK_INFO))
+    assert a["temperature"] == b["temperature"] == 24.9
+
+
+def test_std_check_on_tank_reads_tank_temperature() -> None:
+    parser = MopekaIOTBluetoothDeviceData()
+    values = _values(parser.update(STD_CHECK_ON_TANK_INFO))
+    assert values["battery_voltage"] == 2.59
+    assert values["temperature"] == 14.2
+
+
+def test_std_check_reports_no_tank_level() -> None:
+    """The echo sweep is undecoded, so no tank level may be published."""
+    values = _values(MopekaIOTBluetoothDeviceData().update(STD_CHECK_ON_TANK_INFO))
+    assert "tank_level" not in values
+
+
+def test_std_check_button_not_pressed() -> None:
+    update = MopekaIOTBluetoothDeviceData().update(STD_CHECK_OFF_TANK_INFO)
+    assert not update.binary_entity_values[
+        DeviceKey(key="button_pressed", device_id=None)
+    ].native_value
+
+
+def test_std_check_wrong_length_is_ignored() -> None:
+    info = BluetoothServiceInfo(
+        name="",
+        address="34:08:E1:29:4D:0A",
+        rssi=-70,
+        manufacturer_data={13: bytes.fromhex("00029d27")},
+        service_uuids=["0000ada0-0000-1000-8000-00805f9b34fb"],
+        service_data={},
+        source="local",
+    )
+    assert not _values(MopekaIOTBluetoothDeviceData().update(info))
+
+
+def test_std_check_unknown_sensor_type_is_ignored() -> None:
+    payload = bytearray(bytes.fromhex("00029d270c148081021d08b08104074c40c002a9294d0a"))
+    payload[1] = 0x77
+    info = BluetoothServiceInfo(
+        name="",
+        address="34:08:E1:29:4D:0A",
+        rssi=-70,
+        manufacturer_data={13: bytes(payload)},
+        service_uuids=["0000ada0-0000-1000-8000-00805f9b34fb"],
+        service_data={},
+        source="local",
+    )
+    assert not _values(MopekaIOTBluetoothDeviceData().update(info))
+
+
+def test_std_check_requires_service_uuid() -> None:
+    """Manufacturer ID 13 is Texas Instruments -- the UUID must gate it."""
+    info = BluetoothServiceInfo(
+        name="",
+        address="34:08:E1:29:4D:0A",
+        rssi=-70,
+        manufacturer_data={
+            13: bytes.fromhex("00029d270c148081021d08b08104074c40c002a9294d0a")
+        },
+        service_uuids=["0000180f-0000-1000-8000-00805f9b34fb"],
+        service_data={},
+        source="local",
+    )
+    assert not _values(MopekaIOTBluetoothDeviceData().update(info))
