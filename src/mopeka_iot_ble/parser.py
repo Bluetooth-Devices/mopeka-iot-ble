@@ -122,7 +122,8 @@ def std_echo_sweep(data: bytes) -> list[tuple[int, int]]:
     """
     packed = int.from_bytes(data[4:19], "little")
     return [
-        ((packed >> (10 * i)) & 0x1F, (packed >> (10 * i + 5)) & 0x1F) for i in range(12)
+        ((packed >> (10 * i)) & 0x1F, (packed >> (10 * i + 5)) & 0x1F)
+        for i in range(12)
     ]
 
 
