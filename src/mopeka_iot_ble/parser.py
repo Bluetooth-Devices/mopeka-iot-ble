@@ -112,17 +112,48 @@ def std_raw_temp_to_celsius(raw_temp: int) -> float:
     return (raw_temp - 25) * 1.776964
 
 
-def std_echo_entries(data: bytes) -> list[int]:
-    """Return the 12 raw 10-bit echo entries from a Standard Check advertisement.
+def std_echo_sweep(data: bytes) -> list[tuple[int, int]]:
+    """Return the 12 (time, amplitude) echo pairs of a Standard Check advert.
 
     Bytes 4-18 are exactly 120 bits, packed little-endian as twelve 10-bit
-    entries. The high bits of each entry carry the echo strength: on both
-    captures taken off a tank every entry is below 32, while the capture taken
-    on a tank reaches 469. The low bits are a time-of-flight delta whose scale
-    is not yet known, so no tank level is derived from them.
+    entries: a 5-bit time delta in 10us ticks followed by a 5-bit amplitude.
+    Layout confirmed against ESPHome's ``mopeka_std_check`` component, which
+    decodes the same manufacturer payload.
     """
     packed = int.from_bytes(data[4:19], "little")
-    return [(packed >> (10 * i)) & 0x3FF for i in range(12)]
+    return [
+        ((packed >> (10 * i)) & 0x1F, (packed >> (10 * i + 5)) & 0x1F) for i in range(12)
+    ]
+
+
+def std_speed_of_sound(temp_celsius: float) -> float:
+    """Return the speed of sound in m/s through pure propane at a temperature."""
+    return (
+        1040.71
+        - 4.87 * temp_celsius
+        - 137.5
+        - 0.0107 * temp_celsius * temp_celsius
+        - 1.63 * temp_celsius
+    )
+
+
+def std_distance_mm(sweep: list[tuple[int, int]], temp_celsius: float) -> int | None:
+    """Return the reading distance in mm, or None when the read is too weak.
+
+    Silent entries only advance the clock, so their time accumulates into the
+    next entry that does report an amplitude; the strongest echo wins.
+    """
+    elapsed = 0
+    best_amplitude = best_time = 0
+    for time_delta, amplitude in sweep:
+        elapsed += time_delta + 1
+        if amplitude:
+            if amplitude > best_amplitude:
+                best_amplitude, best_time = amplitude, elapsed
+            elapsed = 0
+    if best_amplitude < 2 or best_time < 2:
+        return None
+    return int(std_speed_of_sound(temp_celsius) * best_time / 100)
 
 
 def tank_level_to_mm(tank_level: int) -> int:
@@ -254,8 +285,9 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
         Layout (23 bytes): byte 1 is the sensor type, byte 2 the raw battery
         voltage, byte 3 packs a 6-bit raw temperature with the slow-update and
         sync-pressed flags. Bytes 4-18 carry the ultrasonic echo sweep as twelve
-        10-bit entries; only their strength is reported, since the time-of-flight
-        scale is unknown -- no tank level is reported for these models.
+        10-bit entries, from which the reading distance is derived. Unlike the
+        Pro models these report a distance to the fluid surface rather than a
+        percentage, so the tank geometry stays the consumer's business.
         """
         if len(data) != MOPEKA_STD_ADV_LENGTH:
             _LOGGER.debug(
@@ -263,7 +295,7 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
                 service_info,
             )
             return
-        if not (device_type := STD_DEVICE_TYPES.get(data[1])):
+        if not (device_type := STD_DEVICE_TYPES.get(data[1] & 0xCF)):
             _LOGGER.debug(
                 "Unsupported Mopeka Standard Check advertisement: %s", service_info
             )
@@ -274,9 +306,9 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
         self.set_device_name(f"{device_type.name} {short_address(address)}")
 
         battery_voltage = std_raw_voltage_to_voltage(data[2])
+        temp_celsius = std_raw_temp_to_celsius(data[3] & 0x3F)
         self.update_predefined_sensor(
-            SensorLibrary.TEMPERATURE__CELSIUS,
-            round(std_raw_temp_to_celsius(data[3] & 0x3F), 1),
+            SensorLibrary.TEMPERATURE__CELSIUS, round(temp_celsius, 1)
         )
         self.update_predefined_sensor(
             SensorLibrary.BATTERY__PERCENTAGE,
@@ -294,10 +326,18 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
             key="button_pressed",
             name="Button pressed",
         )
+        sweep = std_echo_sweep(data)
         self.update_sensor(
             "echo_strength",
             None,
-            max(std_echo_entries(data)) >> 5,
+            max(amplitude for _, amplitude in sweep),
             None,
             "Echo strength",
+        )
+        self.update_sensor(
+            "tank_level",
+            Units.LENGTH_MILLIMETERS,
+            std_distance_mm(sweep, temp_celsius),
+            SensorDeviceClass.DISTANCE,
+            "Tank Level",
         )

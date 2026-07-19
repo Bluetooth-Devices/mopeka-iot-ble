@@ -1700,10 +1700,32 @@ def test_std_check_on_tank_reads_tank_temperature() -> None:
     assert values["temperature"] == 14.2
 
 
-def test_std_check_reports_no_tank_level() -> None:
-    """The echo sweep is undecoded, so no tank level may be published."""
+def test_std_check_reports_distance_on_tank() -> None:
+    """The strongest echo yields a reading distance to the fluid surface."""
     values = _values(MopekaIOTBluetoothDeviceData().update(STD_CHECK_ON_TANK_INFO))
-    assert "tank_level" not in values
+    assert values["tank_level"] == 177
+
+
+def test_std_check_reports_no_distance_off_tank() -> None:
+    """A silent sweep is a failed read, not a zero-distance reading."""
+    values = _values(MopekaIOTBluetoothDeviceData().update(STD_CHECK_OFF_TANK_INFO))
+    assert values["tank_level"] is None
+
+
+def test_std_check_sensor_type_ignores_reserved_bits() -> None:
+    """Bits 4 and 5 of the type byte are not part of the hardware id."""
+    info = BluetoothServiceInfo(
+        name="",
+        address="34:08:E1:29:4D:0A",
+        rssi=-70,
+        manufacturer_data={
+            13: bytes.fromhex("00329d270c148081021d08b08104074c40c002a9294d0a")
+        },
+        service_uuids=["0000ada0-0000-1000-8000-00805f9b34fb"],
+        service_data={},
+        source="local",
+    )
+    assert MopekaIOTBluetoothDeviceData().update(info).devices[None].model == "M1001"
 
 
 def test_std_check_echo_strength_is_zero_off_tank() -> None:
