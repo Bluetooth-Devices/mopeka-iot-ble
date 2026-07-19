@@ -1647,9 +1647,7 @@ def test_battery_reserved_bit_is_ignored():
     battery_key = DeviceKey(key="battery", device_id=None)
 
     clear = MopekaIOTBluetoothDeviceData().update(PRO_SERVICE_GOOD_QUALITY_INFO)
-    set_ = MopekaIOTBluetoothDeviceData().update(
-        PRO_SERVICE_BATTERY_RESERVED_BIT_INFO
-    )
+    set_ = MopekaIOTBluetoothDeviceData().update(PRO_SERVICE_BATTERY_RESERVED_BIT_INFO)
 
     assert (
         set_.entity_values[voltage_key].native_value
