@@ -136,7 +136,8 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
         self.set_device_manufacturer("Mopeka IOT")
         self.set_device_type(device_type.model)
         self.set_device_name(f"{device_type.name} {short_address(address)}")
-        battery = data[1]
+        # Bit 7 is reserved and is not part of the battery reading.
+        battery = data[1] & 0x7F
         battery_voltage = battery_to_voltage(battery)
         battery_percentage = battery_to_percentage(battery)
         button_pressed = bool(data[2] & 0x80 > 0)
