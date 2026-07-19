@@ -112,6 +112,19 @@ def std_raw_temp_to_celsius(raw_temp: int) -> float:
     return (raw_temp - 25) * 1.776964
 
 
+def std_echo_entries(data: bytes) -> list[int]:
+    """Return the 12 raw 10-bit echo entries from a Standard Check advertisement.
+
+    Bytes 4-18 are exactly 120 bits, packed little-endian as twelve 10-bit
+    entries. The high bits of each entry carry the echo strength: on both
+    captures taken off a tank every entry is below 32, while the capture taken
+    on a tank reaches 469. The low bits are a time-of-flight delta whose scale
+    is not yet known, so no tank level is derived from them.
+    """
+    packed = int.from_bytes(data[4:19], "little")
+    return [(packed >> (10 * i)) & 0x3FF for i in range(12)]
+
+
 def tank_level_to_mm(tank_level: int) -> int:
     """Convert tank level value to mm."""
     return tank_level * 10
@@ -240,8 +253,9 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
 
         Layout (23 bytes): byte 1 is the sensor type, byte 2 the raw battery
         voltage, byte 3 packs a 6-bit raw temperature with the slow-update and
-        sync-pressed flags. Bytes 4-18 carry the raw ultrasonic echo sweep,
-        which is not decoded yet -- no tank level is reported for these models.
+        sync-pressed flags. Bytes 4-18 carry the ultrasonic echo sweep as twelve
+        10-bit entries; only their strength is reported, since the time-of-flight
+        scale is unknown -- no tank level is reported for these models.
         """
         if len(data) != MOPEKA_STD_ADV_LENGTH:
             _LOGGER.debug(
@@ -279,4 +293,11 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
             bool(data[3] & 0x80),
             key="button_pressed",
             name="Button pressed",
+        )
+        self.update_sensor(
+            "echo_strength",
+            None,
+            max(std_echo_entries(data)) >> 5,
+            None,
+            "Echo strength",
         )

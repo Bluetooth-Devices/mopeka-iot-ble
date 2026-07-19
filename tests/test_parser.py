@@ -1706,6 +1706,18 @@ def test_std_check_reports_no_tank_level() -> None:
     assert "tank_level" not in values
 
 
+def test_std_check_echo_strength_is_zero_off_tank() -> None:
+    """Every echo entry is silent when the sensor is not mounted on a tank."""
+    values = _values(MopekaIOTBluetoothDeviceData().update(STD_CHECK_OFF_TANK_INFO))
+    assert values["echo_strength"] == 0
+
+
+def test_std_check_echo_strength_is_set_on_tank() -> None:
+    """A mounted sensor returns at least one strong echo."""
+    values = _values(MopekaIOTBluetoothDeviceData().update(STD_CHECK_ON_TANK_INFO))
+    assert values["echo_strength"] == 14
+
+
 def test_std_check_button_not_pressed() -> None:
     update = MopekaIOTBluetoothDeviceData().update(STD_CHECK_OFF_TANK_INFO)
     assert not update.binary_entity_values[
