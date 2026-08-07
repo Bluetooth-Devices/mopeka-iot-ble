@@ -65,6 +65,16 @@ PRO_SERVICE_GOOD_QUALITY_INFO = BluetoothServiceInfo(
     source="local",
 )
 
+PRO_SERVICE_BATTERY_RESERVED_BIT_INFO = BluetoothServiceInfo(
+    name="",
+    address="C9:F3:32:E0:F5:09",
+    rssi=-63,
+    manufacturer_data={89: b"\x08\xf2F\x00\xc0\xe0\xf5\t\xf0\xd8"},
+    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
 PRO_INSTALLED_SERVICE_INFO = BluetoothServiceInfo(
     name="",
     address="C9:F3:32:E0:F5:09",
@@ -1630,17 +1640,6 @@ def test_tdr40_air_good_quality():
     )
 
 
-PRO_SERVICE_BATTERY_RESERVED_BIT_INFO = BluetoothServiceInfo(
-    name="",
-    address="C9:F3:32:E0:F5:09",
-    rssi=-63,
-    manufacturer_data={89: b"\x08\xf2F\x00\xc0\xe0\xf5\t\xf0\xd8"},
-    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
-    service_data={},
-    source="local",
-)
-
-
 def test_battery_reserved_bit_is_ignored():
     """Bit 7 of the battery byte is reserved and must not inflate the reading."""
     voltage_key = DeviceKey(key="battery_voltage", device_id=None)
@@ -1657,3 +1656,5 @@ def test_battery_reserved_bit_is_ignored():
         set_.entity_values[battery_key].native_value
         == clear.entity_values[battery_key].native_value
     )
+    assert set_.entity_values[voltage_key].native_value == 3.5625
+    assert set_.entity_values[battery_key].native_value == 100.0
