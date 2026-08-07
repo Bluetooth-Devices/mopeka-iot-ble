@@ -52,26 +52,46 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   release:
-    runs-on: ubuntu-latest
-    environment: release
-    if: github.ref == 'refs/heads/main'
     needs:
       - test
       - lint
+    if: github.ref_name == 'main'
+
+    runs-on: ubuntu-latest
+    environment: release
+    concurrency:
+      group: release-${{ github.ref }}
+      cancel-in-progress: false
+    permissions:
+      id-token: write
+      contents: write
 
     steps:
-      - uses: actions/checkout@v3
+      # Unlike pySwitchBot this repo has no default-branch ruleset, so PSR's
+      # version-bump commit/tag push works with the workflow token and no
+      # release-bot App token is needed.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          ref: ${{ github.ref }}
 
-      # Run semantic release:
-      # - Update CHANGELOG.md
-      # - Update version in code
-      # - Create git tag
-      # - Create GitHub release
-      # - Publish to PyPI
-      - name: Python Semantic Release
-        uses: python-semantic-release/python-semantic-release@v7.34.6
+      - name: Create local branch name
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: git switch -C "$BRANCH"
+
+      - name: Release
+        uses: python-semantic-release/python-semantic-release@39dd2052f2ce8282a5d932c31d58a2ca06d2550e # v10.6.1
+        id: release
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          pypi_token: ${{ secrets.PYPI_TOKEN }}
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1
+        if: steps.release.outputs.released == 'true'
+
+      - name: Publish package distributions to GitHub Releases
+        uses: python-semantic-release/upload-to-gh-release@0a92b5d7ebfc15a84f9801ebd1bf706343d43711 # main
+        if: steps.release.outputs.released == 'true'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
