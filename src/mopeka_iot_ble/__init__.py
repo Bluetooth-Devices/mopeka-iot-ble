@@ -39,7 +39,6 @@ __all__ = [
     "DeviceKey",
     "SensorDeviceClass",
     "SensorUpdate",
-    "SensorDeviceInfo",
     "SensorValue",
     "Units",
 ]
