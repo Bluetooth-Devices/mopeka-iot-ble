@@ -22,24 +22,23 @@ from sensor_state_data import (
     Units,
 )
 
-from .parser import MopekaIOTBluetoothDeviceData
 from .models import MediumType
+from .parser import MopekaIOTBluetoothDeviceData
 
 __version__ = "0.8.0"
 
 __all__ = [
-    "MopekaIOTBluetoothDeviceData",
-    "BinarySensorDeviceClass",
     "BinarySensorDescription",
+    "BinarySensorDeviceClass",
     "BinarySensorValue",
-    "MediumType",
-    "SensorDescription",
-    "SensorDeviceInfo",
     "DeviceClass",
     "DeviceKey",
+    "MediumType",
+    "MopekaIOTBluetoothDeviceData",
+    "SensorDescription",
     "SensorDeviceClass",
-    "SensorUpdate",
     "SensorDeviceInfo",
+    "SensorUpdate",
     "SensorValue",
     "Units",
 ]

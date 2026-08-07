@@ -1,16 +1,5 @@
+import pytest
 from bluetooth_sensor_state_data import BluetoothServiceInfo, SensorUpdate
-from mopeka_iot_ble import MediumType
-
-# Consider renaming the hex method to avoid the override complaint
-from mopeka_iot_ble.parser import (
-    MopekaIOTBluetoothDeviceData,
-    battery_to_percentage,
-    battery_to_voltage,
-    hex,
-    tank_level_and_temp_to_mm,
-    tank_level_to_mm,
-    temp_to_celsius,
-)
 from sensor_state_data import (
     BinarySensorDescription,
     BinarySensorDeviceClass,
@@ -23,7 +12,18 @@ from sensor_state_data import (
     Units,
 )
 
-import pytest
+from mopeka_iot_ble import MediumType
+
+# Consider renaming the hex method to avoid the override complaint
+from mopeka_iot_ble.parser import (
+    MopekaIOTBluetoothDeviceData,
+    battery_to_percentage,
+    battery_to_voltage,
+    hex,
+    tank_level_and_temp_to_mm,
+    tank_level_to_mm,
+    temp_to_celsius,
+)
 
 PRO_SERVICE_BAD_QUALITY_INFO = BluetoothServiceInfo(
     name="",
