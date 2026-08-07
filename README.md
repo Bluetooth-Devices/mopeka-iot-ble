@@ -35,6 +35,58 @@ Install this via pip (or your favourite package manager):
 
 `pip install mopeka-iot-ble`
 
+## Usage
+
+The library parses a single BLE advertisement into a `SensorUpdate`:
+
+```python
+from bluetooth_sensor_state_data import BluetoothServiceInfo
+from mopeka_iot_ble import MediumType, MopekaIOTBluetoothDeviceData
+
+service_info = BluetoothServiceInfo(
+    name="",
+    address="C9:F3:32:E0:F5:09",
+    rssi=-60,
+    manufacturer_data={89: b"\x08\x72\x46\x00\xc0\xe0\xf5\x09\xf0\xd8"},
+    service_uuids=["0000fee5-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
+update = MopekaIOTBluetoothDeviceData(MediumType.PROPANE).update(service_info)
+for value in update.entity_values.values():
+    print(value.name, value.native_value)
+```
+
+### Decode a raw payload from the command line
+
+If you capture advertisements outside Home Assistant (e.g. via nRF Connect,
+`bluetoothctl`, or an MQTT gateway / MQTT Explorer) you can decode the raw
+manufacturer payload — the bytes that ship under Mopeka's company id `89`
+(`0x0059`) — with the bundled example script:
+
+```console
+$ python examples/decode_advertisement.py C9:F3:32:E0:F5:09 08 72 46 00 c0 e0 f5 09 f0 d8
+Device : Pro Plus F509
+Model  : M1015
+Maker  : Mopeka IOT
+
+Sensors:
+  Temperature: 30 °C
+  Battery: 100 %
+  Battery Voltage: 3.5625 V
+  Tank Level: 0 mm
+  Position X: 240
+  Position Y: 216
+  Reading quality: 100 %
+  Signal Strength: -60 dBm
+  Button pressed: False
+```
+
+Use `--medium` to convert the tank level with the right curve (e.g.
+`--medium fresh_water`). The payload accepts any common separator
+(`08 72 ...`, `08:72:...`, or `087246...`).
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
