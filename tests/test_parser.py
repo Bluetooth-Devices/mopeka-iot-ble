@@ -107,6 +107,31 @@ CHECK_UNIVERSAL_INSTALLED_SERVICE_INFO = BluetoothServiceInfo(
     source="local",
 )
 
+# M1001 uses manufacturer ID 13 (not 89) with a different protocol
+M1001_NOT_CONNECTED_SERVICE_INFO = BluetoothServiceInfo(
+    name="",
+    address="34:08:E1:29:4D:0A",
+    rssi=-70,
+    manufacturer_data={
+        13: bytes.fromhex("00029d270c148081021d08b08104074c40c002a9294d0a")
+    },
+    service_uuids=["0000ada0-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
+M1001_CONNECTED_SERVICE_INFO = BluetoothServiceInfo(
+    name="",
+    address="34:08:E1:29:4D:0A",
+    rssi=-78,
+    manufacturer_data={
+        13: bytes.fromhex("00028c212854f701103e1c3001011330d08106b8294d0a")
+    },
+    service_uuids=["0000ada0-0000-1000-8000-00805f9b34fb"],
+    service_data={},
+    source="local",
+)
+
 
 PRO_200B_SERVICE_INFO = BluetoothServiceInfo(
     name="",
@@ -1611,6 +1636,220 @@ def test_tdr40_air_good_quality():
                 device_key=DeviceKey(key="accelerometer_x", device_id=None),
                 name="Position X",
                 native_value=128,
+            ),
+        },
+        binary_entity_descriptions={
+            DeviceKey(key="button_pressed", device_id=None): BinarySensorDescription(
+                device_key=DeviceKey(key="button_pressed", device_id=None),
+                device_class=BinarySensorDeviceClass.OCCUPANCY,
+            )
+        },
+        binary_entity_values={
+            DeviceKey(key="button_pressed", device_id=None): BinarySensorValue(
+                device_key=DeviceKey(key="button_pressed", device_id=None),
+                name="Button pressed",
+                native_value=False,
+            )
+        },
+        events={},
+    )
+
+
+def test_m1001_not_connected():
+    """Test M1001 sensor when not connected to a tank (quality=0)."""
+    parser = MopekaIOTBluetoothDeviceData()
+    service_info = M1001_NOT_CONNECTED_SERVICE_INFO
+    result = parser.update(service_info)
+    assert result == SensorUpdate(
+        title=None,
+        devices={
+            None: SensorDeviceInfo(
+                name="M1001 4D0A",
+                model="M1001",
+                manufacturer="Mopeka IOT",
+                sw_version=None,
+                hw_version=None,
+            )
+        },
+        entity_descriptions={
+            DeviceKey(key="battery_voltage", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="battery_voltage", device_id=None),
+                device_class=SensorDeviceClass.VOLTAGE,
+                native_unit_of_measurement=Units.ELECTRIC_POTENTIAL_VOLT,
+            ),
+            DeviceKey(key="tank_level", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level", device_id=None),
+                device_class=SensorDeviceClass.DISTANCE,
+                native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
+            ),
+            DeviceKey(key="temperature", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="temperature", device_id=None),
+                device_class=SensorDeviceClass.TEMPERATURE,
+                native_unit_of_measurement=Units.TEMP_CELSIUS,
+            ),
+            DeviceKey(key="battery", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="battery", device_id=None),
+                device_class=SensorDeviceClass.BATTERY,
+                native_unit_of_measurement=Units.PERCENTAGE,
+            ),
+            DeviceKey(key="signal_strength", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="signal_strength", device_id=None),
+                device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+                native_unit_of_measurement=Units.SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+            ),
+            DeviceKey(key="reading_quality", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="reading_quality", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=Units.PERCENTAGE,
+            ),
+            DeviceKey(key="reading_quality_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="reading_quality_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
+        },
+        entity_values={
+            DeviceKey(key="battery_voltage", device_id=None): SensorValue(
+                device_key=DeviceKey(key="battery_voltage", device_id=None),
+                name="Battery Voltage",
+                native_value=3.34375,
+            ),
+            DeviceKey(key="tank_level", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level", device_id=None),
+                name="Tank Level",
+                native_value=None,  # No tank level when quality=0
+            ),
+            DeviceKey(key="temperature", device_id=None): SensorValue(
+                device_key=DeviceKey(key="temperature", device_id=None),
+                name="Temperature",
+                native_value=-1,
+            ),
+            DeviceKey(key="battery", device_id=None): SensorValue(
+                device_key=DeviceKey(key="battery", device_id=None),
+                name="Battery",
+                native_value=100,
+            ),
+            DeviceKey(key="signal_strength", device_id=None): SensorValue(
+                device_key=DeviceKey(key="signal_strength", device_id=None),
+                name="Signal Strength",
+                native_value=-70,
+            ),
+            DeviceKey(key="reading_quality", device_id=None): SensorValue(
+                device_key=DeviceKey(key="reading_quality", device_id=None),
+                name="Reading quality",
+                native_value=0,
+            ),
+            DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="reading_quality_raw", device_id=None),
+                name="Reading quality raw",
+                native_value=0,
+            ),
+        },
+        binary_entity_descriptions={
+            DeviceKey(key="button_pressed", device_id=None): BinarySensorDescription(
+                device_key=DeviceKey(key="button_pressed", device_id=None),
+                device_class=BinarySensorDeviceClass.OCCUPANCY,
+            )
+        },
+        binary_entity_values={
+            DeviceKey(key="button_pressed", device_id=None): BinarySensorValue(
+                device_key=DeviceKey(key="button_pressed", device_id=None),
+                name="Button pressed",
+                native_value=False,
+            )
+        },
+        events={},
+    )
+
+
+def test_m1001_connected():
+    """Test M1001 sensor when connected to a tank (quality>=1)."""
+    parser = MopekaIOTBluetoothDeviceData()
+    service_info = M1001_CONNECTED_SERVICE_INFO
+    result = parser.update(service_info)
+    assert result == SensorUpdate(
+        title=None,
+        devices={
+            None: SensorDeviceInfo(
+                name="M1001 4D0A",
+                model="M1001",
+                manufacturer="Mopeka IOT",
+                sw_version=None,
+                hw_version=None,
+            )
+        },
+        entity_descriptions={
+            DeviceKey(key="battery_voltage", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="battery_voltage", device_id=None),
+                device_class=SensorDeviceClass.VOLTAGE,
+                native_unit_of_measurement=Units.ELECTRIC_POTENTIAL_VOLT,
+            ),
+            DeviceKey(key="tank_level", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level", device_id=None),
+                device_class=SensorDeviceClass.DISTANCE,
+                native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
+            ),
+            DeviceKey(key="temperature", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="temperature", device_id=None),
+                device_class=SensorDeviceClass.TEMPERATURE,
+                native_unit_of_measurement=Units.TEMP_CELSIUS,
+            ),
+            DeviceKey(key="battery", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="battery", device_id=None),
+                device_class=SensorDeviceClass.BATTERY,
+                native_unit_of_measurement=Units.PERCENTAGE,
+            ),
+            DeviceKey(key="signal_strength", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="signal_strength", device_id=None),
+                device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+                native_unit_of_measurement=Units.SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+            ),
+            DeviceKey(key="reading_quality", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="reading_quality", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=Units.PERCENTAGE,
+            ),
+            DeviceKey(key="reading_quality_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="reading_quality_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
+        },
+        entity_values={
+            DeviceKey(key="battery_voltage", device_id=None): SensorValue(
+                device_key=DeviceKey(key="battery_voltage", device_id=None),
+                name="Battery Voltage",
+                native_value=2.8125,
+            ),
+            DeviceKey(key="tank_level", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level", device_id=None),
+                name="Tank Level",
+                native_value=2446,
+            ),
+            DeviceKey(key="temperature", device_id=None): SensorValue(
+                device_key=DeviceKey(key="temperature", device_id=None),
+                name="Temperature",
+                native_value=-7,
+            ),
+            DeviceKey(key="battery", device_id=None): SensorValue(
+                device_key=DeviceKey(key="battery", device_id=None),
+                name="Battery",
+                native_value=94.2,
+            ),
+            DeviceKey(key="signal_strength", device_id=None): SensorValue(
+                device_key=DeviceKey(key="signal_strength", device_id=None),
+                name="Signal Strength",
+                native_value=-78,
+            ),
+            DeviceKey(key="reading_quality", device_id=None): SensorValue(
+                device_key=DeviceKey(key="reading_quality", device_id=None),
+                name="Reading quality",
+                native_value=33,
+            ),
+            DeviceKey(key="reading_quality_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="reading_quality_raw", device_id=None),
+                name="Reading quality raw",
+                native_value=1,
             ),
         },
         binary_entity_descriptions={
