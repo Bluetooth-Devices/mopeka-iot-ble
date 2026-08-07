@@ -131,6 +131,14 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
             return
         adv_length = device_type.adv_length
         if len(data) != adv_length:
+            _LOGGER.debug(
+                "Mopeka IOT BLE advertisement for %s has unexpected length "
+                "%s (expected %s), skipping: %s",
+                device_type.model,
+                len(data),
+                adv_length,
+                service_info,
+            )
             return
 
         self.set_device_manufacturer("Mopeka IOT")
