@@ -46,6 +46,34 @@ MOPEKA_TANK_LEVEL_COEFFICIENTS = {
 MOPEKA_MANUFACTURER = 89
 MOKPEKA_PRO_SERVICE_UUID = "0000fee5-0000-1000-8000-00805f9b34fb"
 
+# --- Standard "Check" sensor (TI chip, service 0xADA0) -----------------------
+# Unlike the Pro line, the Standard sensor broadcasts raw ultrasonic echo data
+# and the client runs the peak-detection + speed-of-sound math (a port of
+# ESPHome's mopeka_std_check component).
+MOPEKA_STD_SERVICE_UUID = "0000ada0-0000-1000-8000-00805f9b34fb"
+# hardware id = manufacturer_data[1] & 0xCF
+MOPEKA_STD_SENSOR_TYPES = {
+    0x02: "Standard",
+    0x03: "XL",
+    0x44: "Standard",  # STANDARD_ALT
+    0x46: "eTrailer",
+}
+# 19-byte packed manufacturer payload.
+MOPEKA_STD_PACKAGE_LEN = 19
+# 1.0 = 100% propane (ESPHome default).
+MOPEKA_PROPANE_BUTANE_MIX = 1.0
+
+
+def std_speed_of_sound(temp_c: float, mix: float = MOPEKA_PROPANE_BUTANE_MIX) -> float:
+    """Return the LPG speed of sound (m/s) for the Standard distance calc."""
+    return (
+        1040.71
+        - 4.87 * temp_c
+        - 137.5 * mix
+        - 0.0107 * temp_c * temp_c
+        - 1.63 * temp_c * mix
+    )
+
 
 @dataclass
 class MopekaDevice:
@@ -118,6 +146,9 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
         manufacturer_data = service_info.manufacturer_data
         service_uuids = service_info.service_uuids
         address = service_info.address
+        if MOPEKA_STD_SERVICE_UUID in service_uuids:
+            self._update_std(service_info)
+            return
         if (
             MOPEKA_MANUFACTURER not in manufacturer_data
             or MOKPEKA_PRO_SERVICE_UUID not in service_uuids
@@ -200,3 +231,95 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
             "Reading quality",
         )
         # Reading stars = (3-reading_quality) * "★" + (reading_quality * "⭐")
+
+    def _update_std(self, service_info: BluetoothServiceInfo) -> None:
+        """Decode a Standard "Check" advertisement (ported from ESPHome)."""
+        address = service_info.address
+        # The Standard sensor emits one manufacturer-data payload; ESPHome does
+        # not check the company id, only the length + hardware id byte.
+        data: bytes | None = None
+        for payload in service_info.manufacturer_data.values():
+            if (
+                len(payload) >= MOPEKA_STD_PACKAGE_LEN
+                and (payload[1] & 0xCF) in MOPEKA_STD_SENSOR_TYPES
+            ):
+                data = payload
+                break
+        if data is None:
+            _LOGGER.debug("Unsupported Mopeka Standard advertisement: %s", service_info)
+            return
+
+        model = MOPEKA_STD_SENSOR_TYPES[data[1] & 0xCF]
+        self.set_device_manufacturer("Mopeka IOT")
+        self.set_device_type(f"{model} Check")
+        self.set_device_name(f"{model} Check {short_address(address)}")
+
+        raw_voltage = data[2]
+        raw_temp = data[3] & 0x3F
+        temp_celsius = -40.0 if raw_temp == 0 else (raw_temp - 25.0) * 1.776964
+        battery_voltage = (raw_voltage / 256.0) * 2.0 + 1.5
+        battery_percentage = round(
+            max(0.0, min(100.0, (battery_voltage - 2.2) / 0.65 * 100.0)), 1
+        )
+
+        # Unpack 12 (time, amplitude) pairs from three little-endian 40-bit
+        # blocks of eight 5-bit fields (LSB first).
+        times: list[int] = []
+        values: list[int] = []
+        for blk in range(3):
+            start = 4 + blk * 5
+            end = start + 5
+            raw = int.from_bytes(data[start:end], "little")
+            for m in range(4):
+                times.append(((raw >> (10 * m)) & 0x1F) + 1)
+                values.append((raw >> (10 * m + 5)) & 0x1F)
+
+        number_usable = 0
+        best_value = 0
+        best_time = 0
+        measurement_time = 0
+        for i in range(12):
+            measurement_time += times[i]
+            if values[i] != 0:
+                number_usable += 1
+                if values[i] > best_value:
+                    best_value = values[i]
+                    best_time = measurement_time
+                measurement_time = 0
+
+        distance_mm = round(std_speed_of_sound(temp_celsius) * best_time / 100.0)
+        valid = number_usable >= 1 and best_value >= 2 and best_time >= 2
+
+        self.update_predefined_sensor(
+            SensorLibrary.TEMPERATURE__CELSIUS, round(temp_celsius, 1)
+        )
+        self.update_predefined_sensor(
+            SensorLibrary.BATTERY__PERCENTAGE, battery_percentage
+        )
+        self.update_predefined_sensor(
+            SensorLibrary.VOLTAGE__ELECTRIC_POTENTIAL_VOLT,
+            round(battery_voltage, 3),
+            name="Battery Voltage",
+            key="battery_voltage",
+        )
+        self.update_sensor(
+            "tank_level",
+            Units.LENGTH_MILLIMETERS,
+            distance_mm if valid else None,
+            SensorDeviceClass.DISTANCE,
+            "Tank Level",
+        )
+        self.update_sensor(
+            "reading_quality_raw",
+            None,
+            best_value,
+            None,
+            "Reading quality raw",
+        )
+        self.update_sensor(
+            "reading_quality",
+            Units.PERCENTAGE,
+            round(best_value / 31 * 100),
+            None,
+            "Reading quality",
+        )
