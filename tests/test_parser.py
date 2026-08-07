@@ -3,6 +3,7 @@ from mopeka_iot_ble import MediumType
 
 # Consider renaming the hex method to avoid the override complaint
 from mopeka_iot_ble.parser import (
+    MOPEKA_TANK_LEVEL_COEFFICIENTS,
     MopekaIOTBluetoothDeviceData,
     battery_to_percentage,
     battery_to_voltage,
@@ -1225,6 +1226,38 @@ def test_tank_level_and_temp_to_mm():
         )
     )
     assert tank_level_mm == expected_mm
+
+
+def test_every_medium_type_has_coefficients():
+    """Every MediumType must have tank-level coefficients.
+
+    tank_level_and_temp_to_mm() indexes MOPEKA_TANK_LEVEL_COEFFICIENTS
+    directly, so a MediumType added to the enum without a matching
+    coefficient entry would raise KeyError at runtime for any device
+    configured with that medium. This locks the two in sync.
+    """
+    missing = [m for m in MediumType if m not in MOPEKA_TANK_LEVEL_COEFFICIENTS]
+    assert missing == []
+
+
+@pytest.mark.parametrize("medium", list(MediumType))
+def test_tank_level_and_temp_to_mm_all_mediums(medium: MediumType) -> None:
+    """tank_level_and_temp_to_mm matches the coefficient table for every medium.
+
+    Exercises each medium's coefficient path so a typo in the
+    MOPEKA_TANK_LEVEL_COEFFICIENTS table is caught by the suite rather
+    than silently shipping a wrong tank-level conversion.
+    """
+    temperature_raw = 77
+    tank_level_raw = 3145
+    c0, c1, c2 = MOPEKA_TANK_LEVEL_COEFFICIENTS[medium]
+    expected_mm = int(
+        tank_level_raw * (c0 + (c1 * temperature_raw) + (c2 * (temperature_raw**2)))
+    )
+    assert (
+        tank_level_and_temp_to_mm(tank_level_raw, temperature_raw, medium)
+        == expected_mm
+    )
 
 
 def test_parser_with_sample_data():
