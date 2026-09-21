@@ -171,6 +171,18 @@ class MopekaIOTBluetoothDeviceData(BluetoothData):
             SensorDeviceClass.DISTANCE,
             "Tank Level",
         )
+        # The raw (uncompensated) reading behind tank_level: tank_level is this
+        # value multiplied by the medium's speed-of-sound polynomial evaluated at
+        # the sensor's own temperature (see tank_level_and_temp_to_mm). Exposing it
+        # lets consumers redo the temperature compensation with a better estimate of
+        # the liquid temperature than the sensor die, which can lag it by hours.
+        self.update_sensor(
+            "tank_level_raw",
+            None,
+            tank_level if reading_quality >= 1 else None,
+            None,
+            "Tank level raw",
+        )
         self.update_sensor(
             "accelerometer_x",
             None,
