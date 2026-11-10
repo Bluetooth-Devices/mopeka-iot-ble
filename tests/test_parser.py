@@ -186,6 +186,11 @@ def test_pro_bad_quality():
                 device_class=SensorDeviceClass.DISTANCE,
                 native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
             ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
             DeviceKey(key="temperature", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 device_class=SensorDeviceClass.TEMPERATURE,
@@ -231,6 +236,11 @@ def test_pro_bad_quality():
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
+                native_value=None,
+            ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                name="Tank level raw",
                 native_value=None,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
@@ -312,6 +322,11 @@ def test_pro_low_quality():
                 device_class=SensorDeviceClass.DISTANCE,
                 native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
             ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
             DeviceKey(key="temperature", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 device_class=SensorDeviceClass.TEMPERATURE,
@@ -357,6 +372,11 @@ def test_pro_low_quality():
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
+                native_value=0,
+            ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                name="Tank level raw",
                 native_value=0,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
@@ -438,6 +458,11 @@ def test_pro_good_quality():
                 device_class=SensorDeviceClass.DISTANCE,
                 native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
             ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
             DeviceKey(key="temperature", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 device_class=SensorDeviceClass.TEMPERATURE,
@@ -483,6 +508,11 @@ def test_pro_good_quality():
             DeviceKey(key="tank_level", device_id=None): SensorValue(
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
+                native_value=0,
+            ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                name="Tank level raw",
                 native_value=0,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
@@ -564,6 +594,11 @@ def test_pro_installed():
                 device_class=SensorDeviceClass.DISTANCE,
                 native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
             ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
             DeviceKey(key="temperature", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 device_class=SensorDeviceClass.TEMPERATURE,
@@ -610,6 +645,11 @@ def test_pro_installed():
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
                 native_value=341,
+            ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                name="Tank level raw",
+                native_value=950,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
                 device_key=DeviceKey(key="temperature", device_id=None),
@@ -690,6 +730,11 @@ def test_check_universal_installed():
                 device_class=SensorDeviceClass.DISTANCE,
                 native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
             ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
             DeviceKey(key="temperature", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 device_class=SensorDeviceClass.TEMPERATURE,
@@ -736,6 +781,11 @@ def test_check_universal_installed():
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
                 native_value=341,
+            ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                name="Tank level raw",
+                native_value=950,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
                 device_key=DeviceKey(key="temperature", device_id=None),
@@ -816,6 +866,11 @@ def test_check_installed():
                 device_class=SensorDeviceClass.DISTANCE,
                 native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
             ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
             DeviceKey(key="temperature", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 device_class=SensorDeviceClass.TEMPERATURE,
@@ -862,6 +917,11 @@ def test_check_installed():
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
                 native_value=341,
+            ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                name="Tank level raw",
+                native_value=950,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
                 device_key=DeviceKey(key="temperature", device_id=None),
@@ -942,6 +1002,11 @@ def test_lippert():
                 device_class=SensorDeviceClass.DISTANCE,
                 native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
             ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
             DeviceKey(key="temperature", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 device_class=SensorDeviceClass.TEMPERATURE,
@@ -988,6 +1053,11 @@ def test_lippert():
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
                 native_value=341,
+            ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                name="Tank level raw",
+                native_value=950,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
                 device_key=DeviceKey(key="temperature", device_id=None),
@@ -1068,6 +1138,11 @@ def test_pro_200b():
                 device_class=SensorDeviceClass.DISTANCE,
                 native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
             ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
             DeviceKey(key="temperature", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 device_class=SensorDeviceClass.TEMPERATURE,
@@ -1114,6 +1189,11 @@ def test_pro_200b():
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
                 native_value=806,
+            ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                name="Tank level raw",
+                native_value=1912,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
                 device_key=DeviceKey(key="temperature", device_id=None),
@@ -1276,6 +1356,11 @@ def test_tdr40_air_bad_quality():
                 device_class=SensorDeviceClass.DISTANCE,
                 native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
             ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
             DeviceKey(key="temperature", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 device_class=SensorDeviceClass.TEMPERATURE,
@@ -1322,6 +1407,11 @@ def test_tdr40_air_bad_quality():
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
                 native_value=588,
+            ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                name="Tank level raw",
+                native_value=3406,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
                 device_key=DeviceKey(key="temperature", device_id=None),
@@ -1403,6 +1493,11 @@ def test_tdr40_air_low_quality():
                 device_class=SensorDeviceClass.DISTANCE,
                 native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
             ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
             DeviceKey(key="temperature", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 device_class=SensorDeviceClass.TEMPERATURE,
@@ -1449,6 +1544,11 @@ def test_tdr40_air_low_quality():
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
                 native_value=141,
+            ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                name="Tank level raw",
+                native_value=828,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
                 device_key=DeviceKey(key="temperature", device_id=None),
@@ -1530,6 +1630,11 @@ def test_tdr40_air_good_quality():
                 device_class=SensorDeviceClass.DISTANCE,
                 native_unit_of_measurement=Units.LENGTH_MILLIMETERS,
             ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                device_class=None,
+                native_unit_of_measurement=None,
+            ),
             DeviceKey(key="temperature", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="temperature", device_id=None),
                 device_class=SensorDeviceClass.TEMPERATURE,
@@ -1576,6 +1681,11 @@ def test_tdr40_air_good_quality():
                 device_key=DeviceKey(key="tank_level", device_id=None),
                 name="Tank Level",
                 native_value=729,
+            ),
+            DeviceKey(key="tank_level_raw", device_id=None): SensorValue(
+                device_key=DeviceKey(key="tank_level_raw", device_id=None),
+                name="Tank level raw",
+                native_value=4221,
             ),
             DeviceKey(key="temperature", device_id=None): SensorValue(
                 device_key=DeviceKey(key="temperature", device_id=None),
